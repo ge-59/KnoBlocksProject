@@ -139,7 +139,9 @@ it('Should return Overkill to Msg.sender if they deposit more than the remaining
   await KnoBlockIOInstance.deployed();
   await KnoBlockIOInstance.createKnoBlock(1001, 1);
   await KnoBlockIOInstance.knoDeposit(0, msgvalue);
-expect //not todei
+  expect(
+    await KnoBlockIOInstance.MockReturnKnoBlockCurrentAmount(0),
+  ).to.equal(1000); //not todei
 });
   
  // Sadge //
