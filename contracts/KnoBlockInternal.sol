@@ -13,61 +13,59 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
 
     function _createKnoBlock(uint256 unlockValue, KnoType knoType) internal {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        uint256 blockId = l.count;
-        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[blockId];
-        myKnoBlock.creator = msg.sender;
-        myKnoBlock.unlockAmount = unlockValue;
-        myKnoBlock.knoType = knoType;
+        uint256 blockid = l.count;
+        l.creator[blockid] = msg.sender;
+        l.unlockAmount[blockid] = unlockValue;
+        l.currentAmount[blockid] = 0;
+        l.knoType[blockid] = knoType;
+        l.unlocked[blockid] = false;
         l.count++;
-        emit NewKnoBlock(blockId, msg.sender, unlockValue, 0, knoType);
+        emit NewKnoBlock(blockid, msg.sender, unlockValue, 0, knoType);
     }
 
     function _deposit(uint256 blockid) internal {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[blockid];
-        require(myKnoBlock.Unlocked == false, 'KnoBlock Already Unlocked');
-        uint256 previousCurrentAmount = myKnoBlock.currentAmount;
-        myKnoBlock.currentAmount += msg.value;
-        if (myKnoBlock.currentAmount == myKnoBlock.unlockAmount) {
+        require(l.unlocked[blockid] == false, 'KnoBlock Already Unlocked');
+        uint256 previousCurrentAmount = l.currentAmount[blockid];
+        l.currentAmount[blockid] += msg.value;
+        if (l.currentAmount[blockid] == l.unlockAmount[blockid]) {
             // Would it make sense to reverse these if the second "if" is far more likely??? Yes
-            myKnoBlock.Unlocked = true;
+            l.unlocked[blockid] = true;
             emit BlockUnlocked(
                 blockid,
-                myKnoBlock.creator,
-                myKnoBlock.unlockAmount,
-                myKnoBlock.currentAmount,
-                myKnoBlock.knoType
+                l.creator[blockid],
+                l.unlockAmount[blockid],
+                l.currentAmount[blockid],
+                l.knoType[blockid]
             );
-        } else if (myKnoBlock.currentAmount > myKnoBlock.unlockAmount) {
-            myKnoBlock.Unlocked = true;
+        } else if (l.currentAmount[blockid] > l.unlockAmount[blockid]) {
+            l.unlocked[blockid] = true;
             payable(msg.sender).transfer(
-                myKnoBlock.currentAmount - myKnoBlock.unlockAmount
+                l.currentAmount[blockid] - l.unlockAmount[blockid]
             );
-            myKnoBlock.currentAmount = myKnoBlock.unlockAmount;
+            l.currentAmount[blockid] = l.unlockAmount[blockid];
             emit BlockUnlocked(
                 blockid,
-                myKnoBlock.creator,
-                myKnoBlock.unlockAmount,
-                myKnoBlock.currentAmount,
-                myKnoBlock.knoType
+                l.creator[blockid],
+                l.unlockAmount[blockid],
+                l.currentAmount[blockid],
+                l.knoType[blockid]
             );
         }
-        myKnoBlock.deposits[msg.sender] += (myKnoBlock.currentAmount -
+        l.deposits[msg.sender] += (l.currentAmount[blockid] -
             previousCurrentAmount);
-        ///BADDDDDD, doesnt account for what has been sent back . fixed?
     }
 
     function _withdraw(uint256 blockid, uint256 amount) internal {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[blockid];
         // make above into seperate function?? wont we need in ALL functions the fuck w the Knoblock
-        require(myKnoBlock.Unlocked == false, 'KnoBlock Already Unlocked');
+        require(l.unlocked[blockid] == false, 'KnoBlock Already Unlocked');
         require(
-            myKnoBlock.deposits[msg.sender] >= amount,
+            l.deposits[msg.sender] >= amount,
             'Invalid Amount/Invalid Caller'
         );
-        myKnoBlock.currentAmount -= amount;
-        myKnoBlock.deposits[msg.sender] -= amount;
+        l.currentAmount[blockid] -= amount;
+        l.deposits[msg.sender] -= amount;
         payable(msg.sender).transfer(amount);
     }
 }

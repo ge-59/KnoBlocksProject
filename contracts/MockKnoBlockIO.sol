@@ -21,47 +21,39 @@ contract MockKnoBlockIO is KnoBlockIO {
         uint256 blockid
     ) public view returns (address) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[blockid];
-        return myKnoBlock.creator;
+        return l.creator[blockid];
     }
 
     function MockReturnKnoBlockUnlockAmount(
         uint256 blockid
     ) public view returns (uint256) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[blockid];
-        return myKnoBlock.unlockAmount;
+        return l.unlockAmount[blockid];
     }
 
     function MockReturnKnoBlockCurrentAmount(
         uint256 blockid
     ) public view returns (uint256) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[blockid];
-        return myKnoBlock.currentAmount;
+        return l.currentAmount[blockid];
     }
 
     function MockReturnKnoBlockKnoType(
         uint256 blockid
     ) public view returns (uint256) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[blockid];
-        return uint256(myKnoBlock.knoType);
+        return uint256(l.knoType[blockid]);
     }
 
     function MockReturnKnoBlockUnlocked(
         uint256 blockid
     ) public view returns (bool) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[blockid];
-        return myKnoBlock.Unlocked;
+        return l.unlocked[blockid];
     }
 
-    function MockReturnKnoBlockDeposits(
-        uint256 blockid
-    ) public view returns (uint256) {
+    function MockReturnKnoBlockDeposits() public view returns (uint256) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[blockid];
-        return myKnoBlock.deposits[msg.sender];
+        return l.deposits[msg.sender];
     }
 }
