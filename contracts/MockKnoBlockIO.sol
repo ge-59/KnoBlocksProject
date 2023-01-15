@@ -64,4 +64,8 @@ contract MockKnoBlockIO is KnoBlockIO {
         KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[blockid];
         return myKnoBlock.deposits[msg.sender];
     }
+
+    function MockReturnKnoBlockBalance() public view returns (uint256) {
+        return address(this).balance;
+    }
 }

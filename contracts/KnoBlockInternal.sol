@@ -54,13 +54,12 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
         }
         myKnoBlock.deposits[msg.sender] += (myKnoBlock.currentAmount -
             previousCurrentAmount);
-        ///BADDDDDD, doesnt account for what has been sent back . fixed?
     }
 
     function _withdraw(uint256 blockid, uint256 amount) internal {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
         KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[blockid];
-        // make above into seperate function?? wont we need in ALL functions the fuck w the Knoblock
+        // make above into seperate function?? wont we need in ALL functions the myKnoblock
         require(myKnoBlock.Unlocked == false, 'KnoBlock Already Unlocked');
         require(
             myKnoBlock.deposits[msg.sender] >= amount,
