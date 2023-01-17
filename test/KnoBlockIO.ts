@@ -195,7 +195,7 @@ describe('KnoBlockIO contract', function () {
       it('Should fail transaction if attempted withdrawl is larger the deposit', async function () {
         const msgvalue = {
           value: ethers.utils.parseEther('0.000000000000001000'),
-        }; //sending 1001 wei
+        }; //sending 1000 wei
         await KnoBlockIOInstance.deployed();
         await KnoBlockIOInstance.createKnoBlock(1001, 1);
         await KnoBlockIOInstance.connect(addr1).knoDeposit(0, msgvalue);
@@ -206,7 +206,7 @@ describe('KnoBlockIO contract', function () {
       it('Should reduce KnoBlocks currentAmount by amount withdrawn', async function () {
         const msgvalue = {
           value: ethers.utils.parseEther('0.000000000000001000'),
-        }; //sending 1001 wei
+        }; //sending 1000 wei
         await KnoBlockIOInstance.deployed();
         await KnoBlockIOInstance.createKnoBlock(1001, 1);
         await KnoBlockIOInstance.connect(addr1).knoDeposit(0, msgvalue);
@@ -215,18 +215,31 @@ describe('KnoBlockIO contract', function () {
           await KnoBlockIOInstance.MockReturnKnoBlockCurrentAmount(0),
         ).to.equal(0);
       });
-      it('Should reduce users deposit amount by withdrawn amount  ', async function () {
+      it('Should reduce users deposit amount by withdrawn amount', async function () {
         const msgvalue = {
           value: ethers.utils.parseEther('0.000000000000001000'),
-        }; //sending 1001 wei
+        }; //sending 1000 wei
         await KnoBlockIOInstance.deployed();
         await KnoBlockIOInstance.createKnoBlock(1001, 1);
         await KnoBlockIOInstance.connect(addr1).knoDeposit(0, msgvalue);
         await KnoBlockIOInstance.connect(addr1).knoWithdraw(0, 1000);
         expect(
-          await KnoBlockIOInstance.MockReturnKnoBlockCurrentAmount(0),
+          await KnoBlockIOInstance.MockReturnKnoBlockDeposits(0),
         ).to.equal(0);
+      });
+      it('Should transfer withdrawn amount to msg.sender', async function () {
+        const msgvalue = {
+          value: ethers.utils.parseEther('0.000000000000001000'),
+        }; //sending 1000 wei
+        await KnoBlockIOInstance.deployed();
+        await KnoBlockIOInstance.createKnoBlock(1001, 1);
+        await KnoBlockIOInstance.connect(addr1).knoDeposit(0, msgvalue);
+        await KnoBlockIOInstance.connect(addr1).knoWithdraw(0, 1000);
+        expect(0).to.equal(
+          await KnoBlockIOInstance.MockReturnKnoBlockBalance(),
+        );
+      });
       });
     });
   });
-});
+
