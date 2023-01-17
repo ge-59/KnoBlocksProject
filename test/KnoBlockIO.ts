@@ -39,7 +39,7 @@ describe('KnoBlockIO contract', function () {
       it('Should add a new KnoBlock to the KnoBlock Mapping', async function () {
         await KnoBlockIOInstance.deployed();
         await KnoBlockIOInstance.createKnoBlock(1001, 1);
-        expect(await KnoBlockIOInstance.JungleIsMassiv).to.equal(1);
+        expect(await KnoBlockIOInstance.JungleIsMassiv).to.equal(1); //sadgeness and confusion
       });
 
       it('new KnoBlock should have msg.sender as creator', async function () {
@@ -78,7 +78,7 @@ describe('KnoBlockIO contract', function () {
         }; //sending 1000 wei
         await KnoBlockIOInstance.deployed();
         await KnoBlockIOInstance.createKnoBlock(1001, 1);
-        await KnoBlockIOInstance.knoDeposit(0, msgvalue);
+        await KnoBlockIOInstance.knoDeposit(0 , msgvalue);
         expect(
           await KnoBlockIOInstance.MockReturnKnoBlockCurrentAmount(0),
         ).to.equal(1000);
@@ -90,7 +90,7 @@ describe('KnoBlockIO contract', function () {
         await KnoBlockIOInstance.deployed();
         await KnoBlockIOInstance.createKnoBlock(1001, 1);
         await KnoBlockIOInstance.knoDeposit(0, msgvalue);
-        expect(await KnoBlockIOInstance.MockReturnKnoBlockDeposits(0)).to.equal(
+        expect(await KnoBlockIOInstance.MockReturnKnoBlockDeposits()).to.equal(
           1000,
         );
       });
@@ -102,7 +102,7 @@ describe('KnoBlockIO contract', function () {
         await KnoBlockIOInstance.deployed();
         await KnoBlockIOInstance.createKnoBlock(1001, 1);
         await KnoBlockIOInstance.knoDeposit(0, msgvalue);
-        expect(await KnoBlockIOInstance.MockReturnKnoBlockDeposits(0)).to.equal(
+        expect(await KnoBlockIOInstance.MockReturnKnoBlockDeposits()).to.equal(
           1001,
         ); // is there any value in keeping this?
         expect(await KnoBlockIOInstance.MockReturnKnoBlockUnlocked(0)).to.be
