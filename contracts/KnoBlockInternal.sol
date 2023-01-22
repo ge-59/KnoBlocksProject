@@ -15,36 +15,36 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
     function _createKnoBlock(uint256 unlockValue, KnoType knoType) internal {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
         uint256 blockId = l.count;
-        l.creator[blockId] = msg.sender;
-        l.unlockAmount[blockId] = unlockValue;
-        l.currentAmount[blockId] = 0;
-        l.knoType[blockId] = knoType;
-        l.unlocked[blockId] = false;
-        l.deleted[blockId] = false;
+        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[blockId];
+        myKnoBlock.creator = msg.sender;
+        myKnoBlock.unlockAmount = unlockValue;
+        myKnoBlock.currentAmount = 0;
+        myKnoBlock.knoType = knoType;
         ++l.count;
         emit NewKnoBlock(blockId);
     }
 
     function _deposit(uint256 blockId) internal {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        if (l.unlocked[blockId] == true) {
+        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[blockId];
+        if (myKnoBlock.Unlocked == true) {
             revert KnoBlockUnlocked('KnoBlock is already Unlocked');
         }
-        if (l.deleted[blockId] == true) {
+        if (myKnoBlock.Deleted == true) {
             revert KnoBlockDeleted();
         }
-        uint256 blockAmount = l.currentAmount[blockId];
-        uint256 blockValue = l.unlockAmount[blockId];
+        uint256 blockAmount = myKnoBlock.currentAmount;
+        uint256 blockValue = myKnoBlock.unlockAmount;
         blockAmount += msg.value;
-        l.deposits[blockId][msg.sender] += msg.value;
-        l.currentAmount[blockId] = blockAmount;
+        myKnoBlock.deposits[msg.sender] += msg.value;
+        myKnoBlock.currentAmount = blockAmount;
         if (blockAmount >= blockValue) {
-            l.unlocked[blockId] = true;
+            myKnoBlock.Unlocked  = true;
             emit BlockUnlocked(blockId);
         }
         if (blockAmount > blockValue) {
             payable(msg.sender).transfer(blockAmount - blockValue);
-            l.currentAmount[blockId] = blockValue;
+            myKnoBlock.currentAmount  = blockValue;
         }
     }
 
@@ -53,65 +53,68 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
 
     /* function _deposit(uint256 blockId) internal {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        require(l.unlocked[blockId] == false, 'KnoBlock Already Unlocked');
-        uint256 previousCurrentAmount = l.currentAmount[blockId];
-        l.currentAmount[blockId] += msg.value;
-        if (l.currentAmount[blockId] == l.unlockAmount[blockId]) {
+        require(myKnoBlock.Unlocked[blockId] == false, 'KnoBlock Already Unlocked');
+        uint256 previousCurrentAmount = myKnoBlock.currentAmount[blockId];
+        myKnoBlock.currentAmount[blockId] += msg.value;
+        if (myKnoBlock.currentAmount[blockId] == myKnoBlock.unlockAmount[blockId]) {
             // Would it make sense to reverse these if the second "if" is far more likely??? Yes
-            l.unlocked[blockId] = true;
+            myKnoBlock.Unlocked[blockId] = true;
             emit BlockUnlocked(blockId);
-        } else if (l.currentAmount[blockId] > l.unlockAmount[blockId]) {
-            l.unlocked[blockId] = true;
+        } else if (myKnoBlock.currentAmount[blockId] > myKnoBlock.unlockAmount[blockId]) {
+            myKnoBlock.Unlocked[blockId] = true;
             payable(msg.sender).transfer(
-                l.currentAmount[blockId] - l.unlockAmount[blockId]
+                myKnoBlock.currentAmount[blockId] - myKnoBlock.unlockAmount[blockId]
             );
-            l.currentAmount[blockId] = l.unlockAmount[blockId];
+            myKnoBlock.currentAmount[blockId] = myKnoBlock.unlockAmount[blockId];
             emit BlockUnlocked(blockId);
         }
-        l.deposits[blockId][msg.sender] += (l.currentAmount[blockId] -
+        myKnoBlock.deposits[blockId][msg.sender] += (myKnoBlock.currentAmount[blockId] -
             previousCurrentAmount);
     }  */
 
     function _withdraw(uint256 blockId, uint256 amount) internal {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        if (l.unlocked[blockId] == true) {
+        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[blockId];
+        if (myKnoBlock.Unlocked == true) {
             revert KnoBlockUnlocked('KnoBlock is already Unlocked');
         }
-        if (l.deposits[blockId][msg.sender] < amount) {
+        if (myKnoBlock.deposits[msg.sender] < amount) {
             revert InvalidWithdraw(
                 'Invalid Funds',
-                l.deposits[blockId][msg.sender]
+                myKnoBlock.deposits[msg.sender]
             );
         }
-        l.currentAmount[blockId] -= amount;
-        l.deposits[blockId][msg.sender] -= amount;
+        myKnoBlock.currentAmount -= amount;
+        myKnoBlock.deposits[msg.sender] -= amount;
         payable(msg.sender).transfer(amount);
     }
 
     function _delete(uint256 blockId) internal {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        if (l.creator[blockId] != msg.sender) {
+        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[blockId];
+        if (myKnoBlock.creator != msg.sender) {
             revert NotKnoBlockOwner();
         }
-        if (l.unlocked[blockId] == true) {
+        if (myKnoBlock.Unlocked == true) {
             revert KnoBlockUnlocked('KnoBlock is already Unlocked');
         }
-        l.deleted[blockId] = true;
+        myKnoBlock.Deleted = true;
     }
 
     function _claim(uint256 blockId) internal {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        if (l.creator[blockId] != msg.sender) {
+        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[blockId];
+        if (myKnoBlock.creator != msg.sender) {
             revert NotKnoBlockOwner();
         }
-        if (l.deleted[blockId] == true) {
+        if (myKnoBlock.Deleted == true) {
             revert KnoBlockDeleted();
         }
-        if (l.unlocked[blockId] != true) {
+        if (myKnoBlock.Unlocked != true) {
             revert KnoBlockLocked();
         }
-        payable(msg.sender).transfer(l.unlockAmount[blockId]);
-        l.deleted[blockId] = true;
+        payable(msg.sender).transfer(myKnoBlock.unlockAmount);
+        myKnoBlock.Deleted = true;
     }
 
     //views
@@ -130,12 +133,13 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
         )
     {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
+        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[blockId];
         return (
-            l.creator[blockId],
-            l.unlockAmount[blockId],
-            l.currentAmount[blockId],
-            l.knoType[blockId],
-            l.unlocked[blockId]
+            myKnoBlock.creator,
+            myKnoBlock.unlockAmount,
+            myKnoBlock.currentAmount,
+            myKnoBlock.knoType,
+            myKnoBlock.Unlocked
         );
     }
 
@@ -153,48 +157,55 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
         uint256 blockId
     ) internal view returns (address) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        return l.creator[blockId];
+        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[blockId];
+        return myKnoBlock.creator;
     }
 
     function _returnKnoBlockUnlockAmount(
         uint256 blockId
     ) internal view returns (uint256) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        return l.unlockAmount[blockId];
+        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[blockId];
+        return myKnoBlock.unlockAmount;
     }
 
     function _returnKnoBlockCurrentAmount(
         uint256 blockId
     ) internal view returns (uint256) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        return l.currentAmount[blockId];
+        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[blockId];
+        return myKnoBlock.currentAmount;
     }
 
     function _returnKnoBlockKnoType(
         uint256 blockId
     ) internal view returns (uint256) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        return uint256(l.knoType[blockId]);
+        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[blockId];
+        return uint256(myKnoBlock.knoType);
     }
 
     function _returnKnoBlockUnlocked(
         uint256 blockId
     ) internal view returns (bool) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        return l.unlocked[blockId];
+        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[blockId];
+        return myKnoBlock.Unlocked;
     }
 
     function _returnKnoBlockDeleted(
         uint256 blockId
     ) internal view returns (bool) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        return l.deleted[blockId];
+        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[blockId];
+        return myKnoBlock.Deleted;
     }
 
     function _returnKnoBlockDeposits(
         uint256 blockId
     ) internal view returns (uint256) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        return l.deposits[blockId][msg.sender];
+        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[blockId];
+        return myKnoBlock.deposits[msg.sender];
     }
 }

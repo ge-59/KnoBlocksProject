@@ -5,16 +5,20 @@ pragma solidity ^0.8.8;
 import { IKnoBlockInternal } from './IKnoBlockInternal.sol';
 
 library KnoBlockStorage {
+    struct KnoBlock {
+        address creator;
+        uint256 unlockAmount;
+        uint256 currentAmount;
+        IKnoBlockInternal.KnoType knoType;
+        bool Unlocked;
+        bool Deleted;
+        mapping(address => uint256) deposits;
+    }
+
     struct Layout {
+        address owner;
         uint256 count;
-        //struct mappings:
-        mapping(uint256 => address) creator;
-        mapping(uint256 => uint256) unlockAmount;
-        mapping(uint256 => uint256) currentAmount;
-        mapping(uint256 => IKnoBlockInternal.KnoType) knoType;
-        mapping(uint256 => bool) unlocked;
-        mapping(uint256 => bool) deleted;
-        mapping(uint256 => mapping(address => uint256)) deposits;
+        mapping(uint256 => KnoBlock) knoBlocks;
     }
 
     bytes32 internal constant STORAGE_SLOT =
