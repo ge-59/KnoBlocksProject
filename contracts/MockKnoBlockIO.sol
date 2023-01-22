@@ -18,43 +18,52 @@ contract MockKnoBlockIO is KnoBlockIO {
     }
 
     function MockReturnKnoBlockCreator(
-        uint256 blockid
+        uint256 blockId
     ) public view returns (address) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        return l.creator[blockid];
+        return l.creator[blockId];
     }
 
     function MockReturnKnoBlockUnlockAmount(
-        uint256 blockid
+        uint256 blockId
     ) public view returns (uint256) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        return l.unlockAmount[blockid];
+        return l.unlockAmount[blockId];
     }
 
     function MockReturnKnoBlockCurrentAmount(
-        uint256 blockid
+        uint256 blockId
     ) public view returns (uint256) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        return l.currentAmount[blockid];
+        return l.currentAmount[blockId];
     }
 
     function MockReturnKnoBlockKnoType(
-        uint256 blockid
+        uint256 blockId
     ) public view returns (uint256) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        return uint256(l.knoType[blockid]);
+        return uint256(l.knoType[blockId]);
     }
 
     function MockReturnKnoBlockUnlocked(
-        uint256 blockid
+        uint256 blockId
     ) public view returns (bool) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        return l.unlocked[blockid];
+        return l.unlocked[blockId];
     }
 
-    function MockReturnKnoBlockDeposits() public view returns (uint256) {
+    function MockReturnKnoBlockDeleted(
+        uint256 blockId
+    ) public view returns (bool) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        return l.deposits[msg.sender];
+        return l.deleted[blockId];
+    }
+
+    function MockReturnKnoBlockDeposits(
+        uint256 blockId
+    ) public view returns (uint256) {
+        KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
+        return l.deposits[blockId][msg.sender];
     }
 
     function MockReturnKnoBlockBalance() public view returns (uint256) {

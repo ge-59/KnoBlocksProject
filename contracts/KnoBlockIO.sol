@@ -12,11 +12,19 @@ contract KnoBlockIO is KnoBlockInternal {
         _createKnoBlock(unlockValue, knoType);
     }
 
-    function knoDeposit(uint256 blockid) public payable {
-        _deposit(blockid);
+    function knoDeposit(uint256 blockId) public payable {
+        _deposit(blockId);
     }
 
-    function knoWithdraw(uint256 blockid, uint256 amount) public {
-        _withdraw(blockid, amount);
+    function knoWithdraw(uint256 blockId, uint256 amount) public {
+        _withdraw(blockId, amount);
+    }
+
+    function knoDelete(uint256 blockId) public {
+        _delete(blockId);
+    }
+
+    function knoClaim(uint256 blockId) public {
+        _claim(blockId);
     }
 }

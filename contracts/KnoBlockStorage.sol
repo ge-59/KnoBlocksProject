@@ -6,7 +6,6 @@ import { IKnoBlockInternal } from './IKnoBlockInternal.sol';
 
 library KnoBlockStorage {
     struct Layout {
-        address owner;
         uint256 count;
         //struct mappings:
         mapping(uint256 => address) creator;
@@ -14,7 +13,8 @@ library KnoBlockStorage {
         mapping(uint256 => uint256) currentAmount;
         mapping(uint256 => IKnoBlockInternal.KnoType) knoType;
         mapping(uint256 => bool) unlocked;
-        mapping(address => uint256) deposits; //currently has massive flaw
+        mapping(uint256 => bool) deleted;
+        mapping(uint256 => mapping(address => uint256)) deposits;
     }
 
     bytes32 internal constant STORAGE_SLOT =
