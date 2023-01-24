@@ -3,6 +3,7 @@
 pragma solidity ^0.8.8;
 
 import { KnoBlockInternal } from './KnoBlockInternal.sol';
+import { IKnoBlockInternal } from './IKnoBlockInternal.sol';
 
 contract KnoBlockView is KnoBlockInternal {
     function getKnoBlock(
@@ -29,39 +30,39 @@ contract KnoBlockView is KnoBlockInternal {
         ) = _getKnoBlock(blockId);
     }
 
-    function Count() external view {
+    function Count() external view returns (uint256) {
         _Count();
     }
 
-    function Owner() external view {
+    function Owner() external view returns (address) {
         _Owner();
     }
 
-    function Creator(uint256 blockId) external view {
+    function Creator(uint256 blockId) external view returns (address) {
         _Creator(blockId);
     }
 
-    function UnlockAmount(uint256 blockId) external view {
+    function UnlockAmount(uint256 blockId) external view returns (uint256) {
         _UnlockAmount(blockId);
     }
 
-    function CurrentAmount(uint256 blockId) external view {
+    function CurrentAmount(uint256 blockId) external view returns (uint256) {
         _CurrentAmount(blockId);
     }
 
-    function Type(uint256 blockId) external view {
+    function Type(uint256 blockId) external view returns (IKnoBlockInternal.KnoType) {
         _Type(blockId);
     }
 
-    function Unlocked(uint256 blockId) external view {
+    function Unlocked(uint256 blockId) external view returns (bool) {
         _Unlocked(blockId);
     }
 
-    function Deleted(uint256 blockId) external view {
+    function Deleted(uint256 blockId) external view returns (bool) {
         _Deleted(blockId);
     }
 
-    function Deposits(uint256 blockId) external view {
-        _Deleted(blockId);
+    function Deposits(uint256 blockId) external view returns (uint256) {
+        _Deposits(blockId);
     }
 }
