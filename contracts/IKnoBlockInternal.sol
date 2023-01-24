@@ -8,7 +8,7 @@ interface IKnoBlockInternal {
     event BlockUnlocked(uint256 blockId);
 
     error KnoBlockUnlocked(string reason); //any reason to have the message
-    // some random video said no point to custom if ya dont
+    // some random video said no point to custom if ya dont. Utube guy is retard, still cheaper. panic? uint256 reason?Drugs?
     error InvalidWithdraw(string reason, uint256 userDepositAmount);
     error NotKnoBlockOwner();
     error KnoBlockDeleted();

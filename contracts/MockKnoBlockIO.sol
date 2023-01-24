@@ -7,73 +7,73 @@ import { KnoBlockStorage } from './KnoBlockStorage.sol';
 import { OwnableStorage } from '@solidstate/contracts/access/ownable/OwnableStorage.sol';
 
 contract MockKnoBlockIO is KnoBlockIO {
-    function MockReturnCount() public view returns (uint256) {
+    function MockCount() public view returns (uint256) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
         return l.count;
     }
 
-    function MockReturnOwner() public view returns (address) {
+    function MockOwner() public view returns (address) {
         OwnableStorage.Layout storage l = OwnableStorage.layout();
         return l.owner;
     }
 
-    function MockReturnKnoBlockCreator(
+    function MockCreator(
         uint256 blockId
     ) public view returns (address) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[blockId];
+        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[MAPPING_SLOT][blockId];
         return myKnoBlock.creator;
     }
 
-    function MockReturnKnoBlockUnlockAmount(
+    function MockUnlockAmount(
         uint256 blockId
     ) public view returns (uint256) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[blockId];
+        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[MAPPING_SLOT][blockId];
         return myKnoBlock.unlockAmount;
     }
 
-    function MockReturnKnoBlockCurrentAmount(
+    function MockCurrentAmount(
         uint256 blockId
     ) public view returns (uint256) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[blockId];
+        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[MAPPING_SLOT][blockId];
         return myKnoBlock.currentAmount;
     }
 
-    function MockReturnKnoBlockKnoType(
+    function MockType(
         uint256 blockId
     ) public view returns (uint256) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[blockId];
+        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[MAPPING_SLOT][blockId];
         return uint256(myKnoBlock.knoType);
     }
 
-    function MockReturnKnoBlockUnlocked(
+    function MockUnlocked(
         uint256 blockId
     ) public view returns (bool) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[blockId];
+        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[MAPPING_SLOT][blockId];
         return myKnoBlock.Unlocked;
     }
 
-    function MockReturnKnoBlockDeleted(
+    function MockDeleted(
         uint256 blockId
     ) public view returns (bool) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[blockId];
+        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[MAPPING_SLOT][blockId];
         return myKnoBlock.Deleted;
     }
 
-    function MockReturnKnoBlockDeposits(
+    function MockDeposits(
         uint256 blockId
     ) public view returns (uint256) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[blockId];
+        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[MAPPING_SLOT][blockId];
         return myKnoBlock.deposits[msg.sender];
     }
 
-    function MockReturnKnoBlockBalance() public view returns (uint256) {
+    function MockBalance() public view returns (uint256) {
         return address(this).balance;
     }
 }

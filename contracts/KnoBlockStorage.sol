@@ -17,7 +17,7 @@ library KnoBlockStorage {
 
     struct Layout {
         uint256 count;
-        mapping(uint256 => KnoBlock) knoBlocks;
+        mapping(uint256 => mapping(uint256 => KnoBlock)) knoBlocks;
     }
 
     bytes32 internal constant STORAGE_SLOT =

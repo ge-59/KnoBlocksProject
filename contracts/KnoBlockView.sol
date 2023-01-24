@@ -15,7 +15,8 @@ contract KnoBlockView is KnoBlockInternal {
             uint256 unlockAmount,
             uint256 currentAmount,
             KnoType knoType,
-            bool unlocked
+            bool unlocked,
+            bool deleted
         )
     {
         (
@@ -23,43 +24,44 @@ contract KnoBlockView is KnoBlockInternal {
             unlockAmount,
             currentAmount,
             knoType,
-            unlocked
+            unlocked,
+            deleted
         ) = _getKnoBlock(blockId);
     }
 
-    function returnCount() external view {
-        _returnCount();
+    function Count() external view {
+        _Count();
     }
 
-    function returnOwner() external view {
-        _returnOwner();
+    function Owner() external view {
+        _Owner();
     }
 
-    function returnKnoBlockCreator(uint256 blockId) external view {
-        _returnKnoBlockCreator(blockId);
+    function Creator(uint256 blockId) external view {
+        _Creator(blockId);
     }
 
-    function returnKnoBlockUnlockAmount(uint256 blockId) external view {
-        _returnKnoBlockUnlockAmount(blockId);
+    function UnlockAmount(uint256 blockId) external view {
+        _UnlockAmount(blockId);
     }
 
-    function returnKnoBlockCurrentAmount(uint256 blockId) external view {
-        _returnKnoBlockCurrentAmount(blockId);
+    function CurrentAmount(uint256 blockId) external view {
+        _CurrentAmount(blockId);
     }
 
-    function returnKnoBlockKnoType(uint256 blockId) external view {
-        _returnKnoBlockKnoType(blockId);
+    function Type(uint256 blockId) external view {
+        _Type(blockId);
     }
 
-    function returnKnoBlockUnlocked(uint256 blockId) external view {
-        _returnKnoBlockUnlocked(blockId);
+    function Unlocked(uint256 blockId) external view {
+        _Unlocked(blockId);
     }
 
-    function returnKnoBlockDeleted(uint256 blockId) external view {
-        _returnKnoBlockDeleted(blockId);
+    function Deleted(uint256 blockId) external view {
+        _Deleted(blockId);
     }
 
-    function returnKnoBlockDeposits(uint256 blockId) external view {
-        _returnKnoBlockDeleted(blockId);
+    function Deposits(uint256 blockId) external view {
+        _Deleted(blockId);
     }
 }

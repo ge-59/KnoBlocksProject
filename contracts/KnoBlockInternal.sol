@@ -6,24 +6,28 @@ import { OwnableInternal } from '@solidstate/contracts/access/ownable/OwnableInt
 import { KnoBlockStorage } from './KnoBlockStorage.sol';
 import { OwnableStorage } from '@solidstate/contracts/access/ownable/OwnableStorage.sol';
 import { IKnoBlockInternal } from './IKnoBlockInternal.sol';
+import { AddressUtils} from '@solidstate/contracts/utils/AddressUtils.sol';
 
 abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
+
+    using AddressUtils for address payable;
+ 
     uint256 internal constant MAPPING_SLOT = 0;
-    
+
     constructor() {
         _setOwner(msg.sender);
     }
 
-    function getBlock(uint256 blockId) internal returns (KnoBlock storage block) {
-    BlockStorage.Layout storage l = BlockStorage.layout();
+    function _getBlock(
+        uint256 blockId
+    ) internal view returns (KnoBlockStorage.KnoBlock storage knoBlock) {
+        knoBlock = KnoBlockStorage.layout().knoBlocks[MAPPING_SLOT][blockId];
+       }
 
-    block = l.myMapping[MAPPING_SLOT][blockId];
-}
-
-    function _createKnoBlock(uint256 unlockValue, KnoType knoType) internal {
+    function _create(uint256 unlockValue, KnoType knoType) internal {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
         uint256 blockId = l.count;
-        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[blockId];
+        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[MAPPING_SLOT][blockId];
         myKnoBlock.creator = msg.sender;
         myKnoBlock.unlockAmount = unlockValue;
         myKnoBlock.currentAmount = 0;
@@ -34,7 +38,7 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
 
     function _deposit(uint256 blockId) internal {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[blockId];
+        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[MAPPING_SLOT][blockId];
         if (myKnoBlock.Unlocked == true) {
             revert KnoBlockUnlocked('KnoBlock is already Unlocked');
         }
@@ -47,12 +51,12 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
         myKnoBlock.deposits[msg.sender] += msg.value;
         myKnoBlock.currentAmount = blockAmount;
         if (blockAmount >= blockValue) {
-            myKnoBlock.Unlocked  = true;
+            myKnoBlock.Unlocked = true;
             emit BlockUnlocked(blockId);
         }
         if (blockAmount > blockValue) {
             payable(msg.sender).transfer(blockAmount - blockValue);
-            myKnoBlock.currentAmount  = blockValue;
+            myKnoBlock.currentAmount = blockValue;
         }
     }
 
@@ -82,7 +86,7 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
 
     function _withdraw(uint256 blockId, uint256 amount) internal {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[blockId];
+        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[MAPPING_SLOT][blockId];
         if (myKnoBlock.Unlocked == true) {
             revert KnoBlockUnlocked('KnoBlock is already Unlocked');
         }
@@ -94,12 +98,12 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
         }
         myKnoBlock.currentAmount -= amount;
         myKnoBlock.deposits[msg.sender] -= amount;
-        payable(msg.sender).transfer(amount);
+        payable(msg.sender).sendValue(amount);
     }
 
     function _delete(uint256 blockId) internal {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[blockId];
+        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[MAPPING_SLOT][blockId];
         if (myKnoBlock.creator != msg.sender) {
             revert NotKnoBlockOwner();
         }
@@ -111,7 +115,7 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
 
     function _claim(uint256 blockId) internal {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[blockId];
+        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[MAPPING_SLOT][blockId];
         if (myKnoBlock.creator != msg.sender) {
             revert NotKnoBlockOwner();
         }
@@ -127,81 +131,75 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
 
     //views
 
-
     function _getKnoBlock(
         uint256 blockId
-    )
-        internal
-        view
-        returns (KnoBlockStorage.KnoBlock storage knoBlock
-        )
-    {
-        knoBlock = KnoBlockStorage.layout().knoBlocks[blockId];
-            }
+    ) internal view returns (KnoBlockStorage.KnoBlock storage knoBlock) {
+        knoBlock = KnoBlockStorage.layout().knoBlocks[MAPPING_SLOT][blockId];
+    }
 
-    function _returnCount() internal view returns (uint256) {
+    function _Count() internal view returns (uint256) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
         return l.count;
     }
 
-    function _returnOwner() internal view returns (address) {
+    function _Owner() internal view returns (address) {
         OwnableStorage.Layout storage l = OwnableStorage.layout();
         return l.owner;
     }
 
-    function _returnKnoBlockCreator(
+    function _Creator(
         uint256 blockId
     ) internal view returns (address) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[blockId];
+        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[MAPPING_SLOT][blockId];
         return myKnoBlock.creator;
     }
 
-    function _returnKnoBlockUnlockAmount(
+    function _UnlockAmount(
         uint256 blockId
     ) internal view returns (uint256) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[blockId];
+        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[MAPPING_SLOT][blockId];
         return myKnoBlock.unlockAmount;
     }
 
-    function _returnKnoBlockCurrentAmount(
+    function _CurrentAmount(
         uint256 blockId
     ) internal view returns (uint256) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[blockId];
+        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[MAPPING_SLOT][blockId];
         return myKnoBlock.currentAmount;
     }
 
-    function _returnKnoBlockKnoType(
+    function _Type(
         uint256 blockId
     ) internal view returns (uint256) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[blockId];
+        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[MAPPING_SLOT][blockId];
         return uint256(myKnoBlock.knoType);
     }
 
-    function _returnKnoBlockUnlocked(
+    function _Unlocked(
         uint256 blockId
     ) internal view returns (bool) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[blockId];
+        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[MAPPING_SLOT][blockId];
         return myKnoBlock.Unlocked;
     }
 
-    function _returnKnoBlockDeleted(
+    function _Deleted(
         uint256 blockId
     ) internal view returns (bool) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[blockId];
+        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[MAPPING_SLOT][blockId];
         return myKnoBlock.Deleted;
     }
 
-    function _returnKnoBlockDeposits(
+    function _Deposits(
         uint256 blockId
     ) internal view returns (uint256) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[blockId];
+        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[MAPPING_SLOT][blockId];
         return myKnoBlock.deposits[msg.sender];
     }
 }
