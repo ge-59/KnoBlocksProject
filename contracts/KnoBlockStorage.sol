@@ -16,7 +16,6 @@ library KnoBlockStorage {
     }
 
     struct Layout {
-        address owner;
         uint256 count;
         mapping(uint256 => KnoBlock) knoBlocks;
     }

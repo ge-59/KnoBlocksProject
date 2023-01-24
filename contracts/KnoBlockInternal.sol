@@ -8,9 +8,17 @@ import { OwnableStorage } from '@solidstate/contracts/access/ownable/OwnableStor
 import { IKnoBlockInternal } from './IKnoBlockInternal.sol';
 
 abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
+    uint256 internal constant MAPPING_SLOT = 0;
+    
     constructor() {
         _setOwner(msg.sender);
     }
+
+    function getBlock(uint256 blockId) internal returns (KnoBlock storage block) {
+    BlockStorage.Layout storage l = BlockStorage.layout();
+
+    block = l.myMapping[MAPPING_SLOT][blockId];
+}
 
     function _createKnoBlock(uint256 unlockValue, KnoType knoType) internal {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
@@ -119,29 +127,17 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
 
     //views
 
+
     function _getKnoBlock(
         uint256 blockId
     )
         internal
         view
-        returns (
-            address creator,
-            uint256 unlockAmount,
-            uint256 currentAmount,
-            KnoType knoType,
-            bool unlocked
+        returns (KnoBlockStorage.KnoBlock storage knoBlock
         )
     {
-        KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[blockId];
-        return (
-            myKnoBlock.creator,
-            myKnoBlock.unlockAmount,
-            myKnoBlock.currentAmount,
-            myKnoBlock.knoType,
-            myKnoBlock.Unlocked
-        );
-    }
+        knoBlock = KnoBlockStorage.layout().knoBlocks[blockId];
+            }
 
     function _returnCount() internal view returns (uint256) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();

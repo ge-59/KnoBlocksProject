@@ -27,39 +27,39 @@ contract KnoBlockView is KnoBlockInternal {
         ) = _getKnoBlock(blockId);
     }
 
-    function returnCount() public view {
+    function returnCount() external view {
         _returnCount();
     }
 
-    function returnOwner() public view {
+    function returnOwner() external view {
         _returnOwner();
     }
 
-    function returnKnoBlockCreator(uint256 blockId) public view {
+    function returnKnoBlockCreator(uint256 blockId) external view {
         _returnKnoBlockCreator(blockId);
     }
 
-    function returnKnoBlockUnlockAmount(uint256 blockId) public view {
+    function returnKnoBlockUnlockAmount(uint256 blockId) external view {
         _returnKnoBlockUnlockAmount(blockId);
     }
 
-    function returnKnoBlockCurrentAmount(uint256 blockId) public view {
+    function returnKnoBlockCurrentAmount(uint256 blockId) external view {
         _returnKnoBlockCurrentAmount(blockId);
     }
 
-    function returnKnoBlockKnoType(uint256 blockId) public view {
+    function returnKnoBlockKnoType(uint256 blockId) external view {
         _returnKnoBlockKnoType(blockId);
     }
 
-    function returnKnoBlockUnlocked(uint256 blockId) public view {
+    function returnKnoBlockUnlocked(uint256 blockId) external view {
         _returnKnoBlockUnlocked(blockId);
     }
 
-    function returnKnoBlockDeleted(uint256 blockId) public view {
+    function returnKnoBlockDeleted(uint256 blockId) external view {
         _returnKnoBlockDeleted(blockId);
     }
 
-    function returnKnoBlockDeposits(uint256 blockId) public view {
+    function returnKnoBlockDeposits(uint256 blockId) external view {
         _returnKnoBlockDeleted(blockId);
     }
 }
