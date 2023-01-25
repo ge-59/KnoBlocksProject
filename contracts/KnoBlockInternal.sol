@@ -58,7 +58,7 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
             emit BlockUnlocked(blockId);
         }
         if (blockAmount > blockValue) {
-            payable(msg.sender).transfer(blockAmount - blockValue);
+            payable(msg.sender).sendValue(blockAmount - blockValue);
             myKnoBlock.currentAmount = blockValue;
         }
     }
@@ -73,7 +73,7 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
             emit BlockUnlocked(blockId);
         } else if (myKnoBlock.currentAmount[blockId] > myKnoBlock.unlockAmount[blockId]) {
             myKnoBlock.Unlocked[blockId] = true;
-            payable(msg.sender).transfer(
+            payable(msg.sender).sendValue(
                 myKnoBlock.currentAmount[blockId] - myKnoBlock.unlockAmount[blockId]
             );
             myKnoBlock.currentAmount[blockId] = myKnoBlock.unlockAmount[blockId];
@@ -127,7 +127,7 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
         if (myKnoBlock.Unlocked != true) {
             revert KnoBlockLocked();
         }
-        payable(msg.sender).transfer(myKnoBlock.unlockAmount);
+        payable(msg.sender).sendValue(myKnoBlock.unlockAmount);
         myKnoBlock.Cancelled = true;
     }
 

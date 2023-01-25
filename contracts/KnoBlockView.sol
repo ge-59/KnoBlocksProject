@@ -7,11 +7,11 @@ import { IKnoBlockInternal } from './IKnoBlockInternal.sol';
 import { KnoBlockStorage } from './KnoBlockStorage.sol';
 
 contract KnoBlockView is KnoBlockInternal {
-    function getKnoBlock(
+    /* function getKnoBlock(
         uint256 blockId
     ) external view returns (KnoBlockStorage.KnoBlock storage knoBlock) {
         _getKnoBlock(blockId);
-    }
+    } */
 
     function count() external view returns (uint256) {
         _count();
