@@ -11,7 +11,7 @@ interface IKnoBlockInternal {
     // some random video said no point to custom if ya dont. Utube guy is retard, still cheaper. panic? uint256 reason?Drugs?
     error InvalidWithdraw(string reason, uint256 userDepositAmount);
     error NotKnoBlockOwner();
-    error KnoBlockDeleted();
+    error KnoBlockCancelled();
     error KnoBlockLocked();
 
     // To define the type of information.

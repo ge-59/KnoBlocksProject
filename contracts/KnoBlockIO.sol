@@ -5,10 +5,7 @@ pragma solidity ^0.8.8;
 import { KnoBlockInternal } from './KnoBlockInternal.sol';
 
 contract KnoBlockIO is KnoBlockInternal {
-    function create(
-        uint256 unlockValue,
-        KnoType knoType
-    ) public payable {
+    function create(uint256 unlockValue, KnoType knoType) public payable {
         _create(unlockValue, knoType);
     }
 
@@ -20,8 +17,8 @@ contract KnoBlockIO is KnoBlockInternal {
         _withdraw(blockId, amount);
     }
 
-    function deleteBlock(uint256 blockId) public {
-        _delete(blockId);
+    function cancel(uint256 blockId) public {
+        _cancel(blockId);
     }
 
     function claim(uint256 blockId) public {

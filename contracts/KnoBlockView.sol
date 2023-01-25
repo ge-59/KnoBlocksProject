@@ -4,65 +4,50 @@ pragma solidity ^0.8.8;
 
 import { KnoBlockInternal } from './KnoBlockInternal.sol';
 import { IKnoBlockInternal } from './IKnoBlockInternal.sol';
+import { KnoBlockStorage } from './KnoBlockStorage.sol';
 
 contract KnoBlockView is KnoBlockInternal {
     function getKnoBlock(
         uint256 blockId
-    )
-        external
-        view
-        returns (
-            address creator,
-            uint256 unlockAmount,
-            uint256 currentAmount,
-            KnoType knoType,
-            bool unlocked,
-            bool deleted
-        )
-    {
-        (
-            creator,
-            unlockAmount,
-            currentAmount,
-            knoType,
-            unlocked,
-            deleted
-        ) = _getKnoBlock(blockId);
+    ) external view returns (KnoBlockStorage.KnoBlock storage knoBlock) {
+        _getKnoBlock(blockId);
     }
 
-    function Count() external view returns (uint256) {
-        _Count();
+    function count() external view returns (uint256) {
+        _count();
     }
 
-    function Owner() external view returns (address) {
-        _Owner();
+    function owned() external view returns (address) {
+        _owned();
     }
 
-    function Creator(uint256 blockId) external view returns (address) {
-        _Creator(blockId);
+    function creator(uint256 blockId) external view returns (address) {
+        _creator(blockId);
     }
 
-    function UnlockAmount(uint256 blockId) external view returns (uint256) {
-        _UnlockAmount(blockId);
+    function unlockAmount(uint256 blockId) external view returns (uint256) {
+        _unlockAmount(blockId);
     }
 
-    function CurrentAmount(uint256 blockId) external view returns (uint256) {
-        _CurrentAmount(blockId);
+    function currentAmount(uint256 blockId) external view returns (uint256) {
+        _currentAmount(blockId);
     }
 
-    function Type(uint256 blockId) external view returns (IKnoBlockInternal.KnoType) {
-        _Type(blockId);
+    function knoType(
+        uint256 blockId
+    ) external view returns (IKnoBlockInternal.KnoType) {
+        _knoType(blockId);
     }
 
-    function Unlocked(uint256 blockId) external view returns (bool) {
-        _Unlocked(blockId);
+    function unlocked(uint256 blockId) external view returns (bool) {
+        _unlocked(blockId);
     }
 
-    function Deleted(uint256 blockId) external view returns (bool) {
-        _Deleted(blockId);
+    function cancelled(uint256 blockId) external view returns (bool) {
+        _cancelled(blockId);
     }
 
-    function Deposits(uint256 blockId) external view returns (uint256) {
-        _Deposits(blockId);
+    function deposits(uint256 blockId) external view returns (uint256) {
+        _deposits(blockId);
     }
 }
