@@ -20,7 +20,6 @@ describe('KnoBlockIO contract', function () {
     });
 
     describe('Deployment', function () {
-      // Does not set the "owner" in KnoBlock Storage, but in Ownable. So do we even need the one in KnoBlockStorage?
       it('sets the right owner', async function () {
         const owner = await instance.MockOwner();
         expect(deployer.address).to.equal(owner);
@@ -134,7 +133,6 @@ describe('KnoBlockIO contract', function () {
           await expect(
             instance.connect(addr1).deposit(0, msgvalue),
           ).to.be.revertedWithCustomError(instance, 'KnoBlockUnlocked');
-          // WHATTTTTT, needed the await before the expect or DANK error ??? HUH
         });
       });
       describe('#withdraw()', () => {

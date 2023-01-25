@@ -43,7 +43,7 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
             blockId
         ];
         if (myKnoBlock.Unlocked == true) {
-            revert KnoBlockUnlocked('KnoBlock is already Unlocked');
+            revert KnoBlockUnlocked();
         }
         if (myKnoBlock.Cancelled == true) {
             revert KnoBlockCancelled();
@@ -62,10 +62,6 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
             myKnoBlock.currentAmount = blockValue;
         }
     }
-
-    //Does not fix a users overkill in deposits, if Knoblock is unlocked
-    // (doesnt really matter since he cant withdraw but maybe bad)
-
     /* function _deposit(uint256 blockId) internal {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
         require(myKnoBlock.Unlocked[blockId] == false, 'KnoBlock Already Unlocked');
@@ -93,15 +89,12 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
             blockId
         ];
         if (myKnoBlock.Unlocked == true) {
-            revert KnoBlockUnlocked('KnoBlock is already Unlocked');
+            revert KnoBlockUnlocked();
         }
         if (myKnoBlock.deposits[msg.sender] < amount) {
-            revert InvalidWithdraw(
-                'Invalid Funds',
-                myKnoBlock.deposits[msg.sender]
-            );
-        }
-        myKnoBlock.currentAmount -= amount;
+            revert InvalidWithdraw();
+        } 
+                myKnoBlock.currentAmount -= amount;
         myKnoBlock.deposits[msg.sender] -= amount;
         payable(msg.sender).sendValue(amount);
     }
@@ -115,7 +108,7 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
             revert NotKnoBlockOwner();
         }
         if (myKnoBlock.Unlocked == true) {
-            revert KnoBlockUnlocked('KnoBlock is already Unlocked');
+            revert KnoBlockUnlocked();
         }
         myKnoBlock.Cancelled = true;
     }
