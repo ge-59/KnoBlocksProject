@@ -11,6 +11,9 @@ describe('KnoBlockIO contract', function () {
     let addr2: SignerWithAddress;
     let instance: MockKnoBlockIO;
 
+    const zero = ethers.constants.Zero;
+    const one = ethers.constants.One;
+
     before(async function () {
       [deployer, addr1, addr2] = await ethers.getSigners();
     });
@@ -28,8 +31,8 @@ describe('KnoBlockIO contract', function () {
 
     describe('#createKnoBlock()', () => {
       it('increments the count variable by 1', async function () {
-        await instance.create(1001, 1);
-        expect(await instance.MockCount()).to.equal(1); //use constants
+        await instance.create(1001, 1); // use constants?? prolly NAH but like..
+        expect(await instance.MockCount()).to.equal(one); //use constants
       });
 
       it('sets creator as msg.sender', async function () {
@@ -41,12 +44,12 @@ describe('KnoBlockIO contract', function () {
 
       it('sets unlockAmount to correctly', async function () {
         await instance.create(1001, 1);
-        expect(await instance.MockUnlockAmount(0)).to.equal(1001);
+        expect(await instance.MockUnlockAmount(0)).to.equal(BigNumber.from('1001'));
       });
 
       it('sets knoType to correctly', async function () {
         await instance.create(1001, 1);
-        expect(await instance.MockType(0)).to.equal(1);
+        expect(await instance.MockType(0)).to.equal(one);
       });
       it('emits new KnoBlock Event', async function () {
         expect(await instance.create(1001, 1))
@@ -62,7 +65,7 @@ describe('KnoBlockIO contract', function () {
         await instance.create(1001, 1);
         await instance.deposit(0, msgvalue);
         expect(await instance.MockCurrentAmount(0)).to.equal(
-          1000,
+          BigNumber.from('1000')
         );
       });
       it('updates msg.senders deposit value accurately', async function () {
@@ -71,7 +74,7 @@ describe('KnoBlockIO contract', function () {
         }; //sending 1000 wei
         await instance.create(1001, 1);
         await instance.deposit(0, msgvalue);
-        expect(await instance.MockDeposits(0)).to.equal(1000);
+        expect(await instance.MockDeposits(0)).to.equal(BigNumber.from('1000'));
       });
 
       it('unlocks the Knoblock if currentAmount is equal to UnlockAmount', async function () {
@@ -143,7 +146,7 @@ describe('KnoBlockIO contract', function () {
           await instance.create(1001, 1);
           await instance.connect(addr1).deposit(0, msgvalue);
           await instance.connect(addr1).withdraw(0, 1000);
-          expect(await instance.MockCurrentAmount(0)).to.equal(0);
+          expect(await instance.MockCurrentAmount(0)).to.equal(zero);
         });
         it('reduces users deposit amount by withdrawn amount', async function () {
           const msgvalue = {
@@ -152,7 +155,7 @@ describe('KnoBlockIO contract', function () {
           await instance.create(1001, 1);
           await instance.connect(addr1).deposit(0, msgvalue);
           await instance.connect(addr1).withdraw(0, 1000);
-          expect(await instance.MockDeposits(0)).to.equal(0);
+          expect(await instance.MockDeposits(0)).to.equal(zero);
         });
         it('transfers withdrawn amount to msg.sender', async function () {
           const msgvalue = {
