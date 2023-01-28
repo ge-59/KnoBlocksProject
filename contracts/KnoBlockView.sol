@@ -10,7 +10,7 @@ contract KnoBlockView is KnoBlockInternal {
     function getKnoBlock(
         uint256 blockId
     ) external view returns (KnoBlockStorage.KnoBlock storage knoBlock) {
-        _getKnoBlock(blockId);
+        _getBlock(blockId);
     }
 
     function count() external view returns (uint256) {
