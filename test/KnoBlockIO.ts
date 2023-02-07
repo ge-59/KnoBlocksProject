@@ -31,8 +31,8 @@ describe('KnoBlockIO contract', function () {
 
     describe('#createKnoBlock()', () => {
       it('increments the count variable by 1', async function () {
-        await instance.create(1001, 1); // use constants?? prolly NAH but like..
-        expect(await instance.MockCount()).to.equal(one); //use constants
+        await instance.create(1001, 1); 
+        expect(await instance.MockCount()).to.equal(one); 
       });
 
       it('sets creator as msg.sender', async function () {
