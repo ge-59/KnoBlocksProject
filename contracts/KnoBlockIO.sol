@@ -6,16 +6,18 @@ import { KnoBlockInternal } from './KnoBlockInternal.sol';
 import { IKnoBlockIO } from './IKnoBlockIO.sol';
 
 contract KnoBlockIO is KnoBlockInternal, IKnoBlockIO {
-
     /**
      * @inheritdoc IKnoBlockIO
      */
 
-    function create(uint256 unlockValue, KnoType knoType) public override payable {
+    function create(
+        uint256 unlockValue,
+        KnoType knoType
+    ) public payable override {
         _create(unlockValue, knoType);
     }
 
-    function deposit(uint256 blockId) public override payable {
+    function deposit(uint256 blockId) public payable override {
         _deposit(blockId);
     }
 
@@ -28,6 +30,6 @@ contract KnoBlockIO is KnoBlockInternal, IKnoBlockIO {
     }
 
     function claim(uint256 blockId) public override {
-        _claim(blockId); 
+        _claim(blockId);
     }
 }

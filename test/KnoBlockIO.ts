@@ -31,20 +31,20 @@ describe('KnoBlockIO contract', function () {
 
     describe('#createKnoBlock()', () => {
       it('increments the count variable by 1', async function () {
-        await instance.create(1001, 1); 
-        expect(await instance.MockCount()).to.equal(one); 
+        await instance.create(1001, 1);
+        expect(await instance.MockCount()).to.equal(one);
       });
 
       it('sets creator as msg.sender', async function () {
         await instance.create(1001, 1);
-        expect(await instance.MockCreator(0)).to.equal(
-          deployer.address,
-        );
+        expect(await instance.MockCreator(0)).to.equal(deployer.address);
       });
 
       it('sets unlockAmount to correctly', async function () {
         await instance.create(1001, 1);
-        expect(await instance.MockUnlockAmount(0)).to.equal(BigNumber.from('1001'));
+        expect(await instance.MockUnlockAmount(0)).to.equal(
+          BigNumber.from('1001'),
+        );
       });
 
       it('sets knoType to correctly', async function () {
@@ -65,7 +65,7 @@ describe('KnoBlockIO contract', function () {
         await instance.create(1001, 1);
         await instance.deposit(0, msgvalue);
         expect(await instance.MockCurrentAmount(0)).to.equal(
-          BigNumber.from('1000')
+          BigNumber.from('1000'),
         );
       });
       it('updates msg.senders deposit value accurately', async function () {
@@ -201,9 +201,10 @@ describe('KnoBlockIO contract', function () {
     describe('reverts if...', () => {
       it('msg.sendor is not the creator of the KnoBlock', async function () {
         await instance.connect(addr1).create(1001, 1);
-        expect(
-          await instance.MockCancelled(0),
-        ).to.be.revertedWithCustomError(instance, 'NotKnoBlockOwner');
+        expect(await instance.MockCancelled(0)).to.be.revertedWithCustomError(
+          instance,
+          'NotKnoBlockOwner',
+        );
       });
     });
     describe('#claim()', () => {
