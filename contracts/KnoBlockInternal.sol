@@ -65,17 +65,17 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
             revert KnoBlockCancelled();
         }
         uint256 blockAmount = KnoBlock.currentAmount;
-        uint256 blockValue = KnoBlock.unlockAmount;
+        uint256 unlockAmount = KnoBlock.unlockAmount;
         blockAmount += msg.value;
         KnoBlock.deposits[msg.sender] += msg.value;
         KnoBlock.currentAmount = blockAmount;
-        if (blockAmount >= blockValue) {
+        if (blockAmount >= unlockAmount) {
             KnoBlock.Unlocked = true;
             emit BlockUnlocked(blockId);
         }
-        if (blockAmount > blockValue) {
-            payable(msg.sender).sendValue(blockAmount - blockValue);
-            KnoBlock.currentAmount = blockValue;
+        if (blockAmount > unlockAmount) {
+            payable(msg.sender).sendValue(blockAmount - unlockAmount);
+            KnoBlock.currentAmount = unlockAmount;
         }
     }
 
