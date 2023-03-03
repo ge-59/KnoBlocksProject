@@ -32,17 +32,17 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
     /**
      * @notice Creates a new KnoBlock
      * @dev Utilizes count variable to determine the blockId of the new Block
-     * @param unlockValue The desired Ether Amount for the KnoBlock to Unlock
+     * @param unlockAmount The desired Ether Amount for the KnoBlock to Unlock
      * @param knoType The type of information [PDF, MP4, Doc]
      */
-    function _create(uint256 unlockValue, KnoType knoType) internal {
+    function _create(uint256 unlockAmount, KnoType knoType) internal {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
         uint256 blockId = l.count;
         KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[MAPPING_SLOT][
             blockId
         ];
         myKnoBlock.creator = msg.sender;
-        myKnoBlock.unlockAmount = unlockValue;
+        myKnoBlock.unlockAmount = unlockAmount;
         myKnoBlock.currentAmount = 0;
         myKnoBlock.knoType = knoType;
         ++l.count;

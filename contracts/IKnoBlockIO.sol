@@ -8,11 +8,11 @@ abstract contract IKnoBlockIO is KnoBlockInternal {
     /**
      * @notice Creates a new KnoBlock
      * @dev Utilizes count variable to determine the blockId of the new Block
-     * @param unlockValue The desired Ether Amount for the KnoBlock to Unlock
+     * @param unlockAmount The desired Ether Amount for the KnoBlock to Unlock
      * @param knoType The type of information [PDF, MP4, Doc]
      */
     function create(
-        uint256 unlockValue,
+        uint256 unlockAmount,
         KnoType knoType
     ) external payable virtual;
 

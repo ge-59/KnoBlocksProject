@@ -11,10 +11,10 @@ contract KnoBlockIO is KnoBlockInternal, IKnoBlockIO {
      */
 
     function create(
-        uint256 unlockValue,
+        uint256 unlockAmount,
         KnoType knoType
     ) external payable override {
-        _create(unlockValue, knoType);
+        _create(unlockAmount, knoType);
     }
 
     function deposit(uint256 blockId) external payable override {
