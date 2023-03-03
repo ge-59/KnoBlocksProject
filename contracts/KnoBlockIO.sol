@@ -13,23 +13,23 @@ contract KnoBlockIO is KnoBlockInternal, IKnoBlockIO {
     function create(
         uint256 unlockValue,
         KnoType knoType
-    ) public payable override {
+    ) external payable override {
         _create(unlockValue, knoType);
     }
 
-    function deposit(uint256 blockId) public payable override {
+    function deposit(uint256 blockId) external payable override {
         _deposit(blockId);
     }
 
-    function withdraw(uint256 blockId, uint256 amount) public override {
+    function withdraw(uint256 blockId, uint256 amount) external override {
         _withdraw(blockId, amount);
     }
 
-    function cancel(uint256 blockId) public override {
+    function cancel(uint256 blockId) external override {
         _cancel(blockId);
     }
 
-    function claim(uint256 blockId) public override {
+    function claim(uint256 blockId) external override {
         _claim(blockId);
     }
 }
