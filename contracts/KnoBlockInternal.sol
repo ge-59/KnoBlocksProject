@@ -38,13 +38,13 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
     function _create(uint256 unlockAmount, KnoType knoType) internal {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
         uint256 blockId = l.count;
-        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[MAPPING_SLOT][
+        KnoBlockStorage.KnoBlock storage KnoBlock = l.knoBlocks[MAPPING_SLOT][
             blockId
         ];
-        myKnoBlock.creator = msg.sender;
-        myKnoBlock.unlockAmount = unlockAmount;
-        myKnoBlock.currentAmount = 0;
-        myKnoBlock.knoType = knoType;
+        KnoBlock.creator = msg.sender;
+        KnoBlock.unlockAmount = unlockAmount;
+        KnoBlock.currentAmount = 0;
+        KnoBlock.knoType = knoType;
         ++l.count;
         emit KnoBlockCreated(blockId);
     }
@@ -56,27 +56,27 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
      */
     function _deposit(uint256 blockId) internal {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[MAPPING_SLOT][
+        KnoBlockStorage.KnoBlock storage KnoBlock = l.knoBlocks[MAPPING_SLOT][
             blockId
         ];
-        if (myKnoBlock.Unlocked == true) {
+        if (KnoBlock.Unlocked == true) {
             revert KnoBlockUnlocked();
         }
-        if (myKnoBlock.Cancelled == true) {
+        if (KnoBlock.Cancelled == true) {
             revert KnoBlockCancelled();
         }
-        uint256 blockAmount = myKnoBlock.currentAmount;
-        uint256 blockValue = myKnoBlock.unlockAmount;
+        uint256 blockAmount = KnoBlock.currentAmount;
+        uint256 blockValue = KnoBlock.unlockAmount;
         blockAmount += msg.value;
-        myKnoBlock.deposits[msg.sender] += msg.value;
-        myKnoBlock.currentAmount = blockAmount;
+        KnoBlock.deposits[msg.sender] += msg.value;
+        KnoBlock.currentAmount = blockAmount;
         if (blockAmount >= blockValue) {
-            myKnoBlock.Unlocked = true;
+            KnoBlock.Unlocked = true;
             emit BlockUnlocked(blockId);
         }
         if (blockAmount > blockValue) {
             payable(msg.sender).sendValue(blockAmount - blockValue);
-            myKnoBlock.currentAmount = blockValue;
+            KnoBlock.currentAmount = blockValue;
         }
     }
 
@@ -87,17 +87,17 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
      */
     function _withdraw(uint256 blockId, uint256 amount) internal {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[MAPPING_SLOT][
+        KnoBlockStorage.KnoBlock storage KnoBlock = l.knoBlocks[MAPPING_SLOT][
             blockId
         ];
-        if (myKnoBlock.Unlocked == true) {
+        if (KnoBlock.Unlocked == true) {
             revert KnoBlockUnlocked();
         }
-        if (myKnoBlock.deposits[msg.sender] < amount) {
+        if (KnoBlock.deposits[msg.sender] < amount) {
             revert InvalidAmount();
         }
-        myKnoBlock.currentAmount -= amount;
-        myKnoBlock.deposits[msg.sender] -= amount;
+        KnoBlock.currentAmount -= amount;
+        KnoBlock.deposits[msg.sender] -= amount;
         payable(msg.sender).sendValue(amount);
     }
 
@@ -107,16 +107,16 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
      */
     function _cancel(uint256 blockId) internal {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[MAPPING_SLOT][
+        KnoBlockStorage.KnoBlock storage KnoBlock = l.knoBlocks[MAPPING_SLOT][
             blockId
         ];
-        if (myKnoBlock.creator != msg.sender) {
+        if (KnoBlock.creator != msg.sender) {
             revert NotKnoBlockOwner();
         }
-        if (myKnoBlock.Unlocked == true) {
+        if (KnoBlock.Unlocked == true) {
             revert KnoBlockUnlocked();
         }
-        myKnoBlock.Cancelled = true;
+        KnoBlock.Cancelled = true;
     }
 
     /**
@@ -125,20 +125,20 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
      */
     function _claim(uint256 blockId) internal {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[MAPPING_SLOT][
+        KnoBlockStorage.KnoBlock storage KnoBlock = l.knoBlocks[MAPPING_SLOT][
             blockId
         ];
-        if (myKnoBlock.creator != msg.sender) {
+        if (KnoBlock.creator != msg.sender) {
             revert NotKnoBlockOwner();
         }
-        if (myKnoBlock.Cancelled == true) {
+        if (KnoBlock.Cancelled == true) {
             revert KnoBlockCancelled();
         }
-        if (myKnoBlock.Unlocked != true) {
+        if (KnoBlock.Unlocked != true) {
             revert KnoBlockLocked();
         }
-        payable(msg.sender).sendValue(myKnoBlock.unlockAmount);
-        myKnoBlock.Cancelled = true;
+        payable(msg.sender).sendValue(KnoBlock.unlockAmount);
+        KnoBlock.Cancelled = true;
     }
 
     //views
@@ -163,10 +163,10 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
      */
     function _creator(uint256 blockId) internal view returns (address) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[MAPPING_SLOT][
+        KnoBlockStorage.KnoBlock storage KnoBlock = l.knoBlocks[MAPPING_SLOT][
             blockId
         ];
-        return myKnoBlock.creator;
+        return KnoBlock.creator;
     }
 
     /**
@@ -175,10 +175,10 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
      */
     function _unlockAmount(uint256 blockId) internal view returns (uint256) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[MAPPING_SLOT][
+        KnoBlockStorage.KnoBlock storage KnoBlock = l.knoBlocks[MAPPING_SLOT][
             blockId
         ];
-        return myKnoBlock.unlockAmount;
+        return KnoBlock.unlockAmount;
     }
 
     /**
@@ -188,10 +188,10 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
 
     function _currentAmount(uint256 blockId) internal view returns (uint256) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[MAPPING_SLOT][
+        KnoBlockStorage.KnoBlock storage KnoBlock = l.knoBlocks[MAPPING_SLOT][
             blockId
         ];
-        return myKnoBlock.currentAmount;
+        return KnoBlock.currentAmount;
     }
 
     /**
@@ -201,10 +201,10 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
 
     function _knoType(uint256 blockId) internal view returns (uint256) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[MAPPING_SLOT][
+        KnoBlockStorage.KnoBlock storage KnoBlock = l.knoBlocks[MAPPING_SLOT][
             blockId
         ];
-        return uint256(myKnoBlock.knoType);
+        return uint256(KnoBlock.knoType);
     }
 
     /**
@@ -213,10 +213,10 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
      */
     function _unlocked(uint256 blockId) internal view returns (bool) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[MAPPING_SLOT][
+        KnoBlockStorage.KnoBlock storage KnoBlock = l.knoBlocks[MAPPING_SLOT][
             blockId
         ];
-        return myKnoBlock.Unlocked;
+        return KnoBlock.Unlocked;
     }
 
     /**
@@ -226,10 +226,10 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
 
     function _cancelled(uint256 blockId) internal view returns (bool) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[MAPPING_SLOT][
+        KnoBlockStorage.KnoBlock storage KnoBlock = l.knoBlocks[MAPPING_SLOT][
             blockId
         ];
-        return myKnoBlock.Cancelled;
+        return KnoBlock.Cancelled;
     }
 
     /**
@@ -239,9 +239,9 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
 
     function _deposits(uint256 blockId) internal view returns (uint256) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[MAPPING_SLOT][
+        KnoBlockStorage.KnoBlock storage KnoBlock = l.knoBlocks[MAPPING_SLOT][
             blockId
         ];
-        return myKnoBlock.deposits[msg.sender];
+        return KnoBlock.deposits[msg.sender];
     }
 }
