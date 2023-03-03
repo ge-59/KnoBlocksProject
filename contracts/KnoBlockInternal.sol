@@ -43,7 +43,6 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
         ];
         KnoBlock.creator = msg.sender;
         KnoBlock.unlockAmount = unlockAmount;
-        KnoBlock.currentAmount = 0;
         KnoBlock.knoType = knoType;
         ++l.count;
         emit KnoBlockCreated(blockId);
