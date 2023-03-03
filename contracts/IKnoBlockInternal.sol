@@ -7,7 +7,7 @@ interface IKnoBlockInternal {
     event BlockUnlocked(uint256 blockId);
 
     error KnoBlockUnlocked();
-    error InvalidWithdraw();
+    error InvalidAmount();
     error NotKnoBlockOwner();
     error KnoBlockCancelled();
     error KnoBlockLocked();

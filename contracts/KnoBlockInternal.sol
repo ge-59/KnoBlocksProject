@@ -94,7 +94,7 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
             revert KnoBlockUnlocked();
         }
         if (myKnoBlock.deposits[msg.sender] < amount) {
-            revert InvalidWithdraw();
+            revert InvalidAmount();
         }
         myKnoBlock.currentAmount -= amount;
         myKnoBlock.deposits[msg.sender] -= amount;
