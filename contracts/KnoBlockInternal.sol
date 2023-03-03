@@ -46,7 +46,7 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
         myKnoBlock.currentAmount = 0;
         myKnoBlock.knoType = knoType;
         ++l.count;
-        emit NewKnoBlock(blockId);
+        emit KnoBlockCreated(blockId);
     }
 
     /**

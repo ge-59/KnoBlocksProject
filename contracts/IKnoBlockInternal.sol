@@ -3,7 +3,7 @@
 pragma solidity ^0.8.8;
 
 interface IKnoBlockInternal {
-    event NewKnoBlock(uint256 blockId);
+    event KnoBlockCreated(uint256 blockId);
     event BlockUnlocked(uint256 blockId);
 
     error KnoBlockUnlocked();
