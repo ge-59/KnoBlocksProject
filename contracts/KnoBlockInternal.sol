@@ -85,10 +85,9 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
      * @param amount The desired withdraw amount
      */
     function _withdraw(uint256 blockId, uint256 amount) internal {
-        KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        KnoBlockStorage.KnoBlock storage KnoBlock = l.knoBlocks[MAPPING_SLOT][
-            blockId
-        ];
+        KnoBlockStorage.KnoBlock storage KnoBlock = KnoBlockStorage
+            .layout()
+            .knoBlocks[MAPPING_SLOT][blockId];
         if (KnoBlock.Unlocked == true) {
             revert KnoBlockUnlocked();
         }
