@@ -54,7 +54,7 @@ contract MockKnoBlockIO is KnoBlockIO {
         KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[MAPPING_SLOT][
             blockId
         ];
-        return myKnoBlock.Unlocked;
+        return myKnoBlock.unlocked;
     }
 
     function MockCancelled(uint256 blockId) public view returns (bool) {
@@ -62,7 +62,7 @@ contract MockKnoBlockIO is KnoBlockIO {
         KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[MAPPING_SLOT][
             blockId
         ];
-        return myKnoBlock.Cancelled;
+        return myKnoBlock.isCancelled;
     }
 
     function MockDeposits(uint256 blockId) public view returns (uint256) {

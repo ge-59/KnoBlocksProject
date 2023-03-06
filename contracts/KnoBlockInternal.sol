@@ -58,11 +58,11 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
         KnoBlockStorage.KnoBlock storage KnoBlock = l.knoBlocks[MAPPING_SLOT][
             blockId
         ];
-        if (KnoBlock.Unlocked == true) {
+        if (KnoBlock.unlocked == true) {
             revert KnoBlockUnlocked();
         }
-        if (KnoBlock.Cancelled == true) {
-            revert KnoBlockCancelled();
+        if (KnoBlock.isCancelled == true) {
+            revert KnoBlockisCancelled();
         }
         uint256 blockAmount = KnoBlock.currentAmount;
         uint256 unlockAmount = KnoBlock.unlockAmount;
@@ -70,7 +70,7 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
         KnoBlock.deposits[msg.sender] += msg.value;
         KnoBlock.currentAmount = blockAmount;
         if (blockAmount >= unlockAmount) {
-            KnoBlock.Unlocked = true;
+            KnoBlock.unlocked = true;
             emit BlockUnlocked(blockId);
         }
         if (blockAmount > unlockAmount) {
@@ -88,7 +88,7 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
         KnoBlockStorage.KnoBlock storage KnoBlock = KnoBlockStorage
             .layout()
             .knoBlocks[MAPPING_SLOT][blockId];
-        if (KnoBlock.Unlocked == true) {
+        if (KnoBlock.unlocked == true) {
             revert KnoBlockUnlocked();
         }
         if (KnoBlock.deposits[msg.sender] < amount) {
@@ -111,10 +111,10 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
         if (KnoBlock.creator != msg.sender) {
             revert NotKnoBlockOwner();
         }
-        if (KnoBlock.Unlocked == true) {
+        if (KnoBlock.unlocked == true) {
             revert KnoBlockUnlocked();
         }
-        KnoBlock.Cancelled = true;
+        KnoBlock.isCancelled = true;
     }
 
     /**
@@ -129,14 +129,14 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
         if (KnoBlock.creator != msg.sender) {
             revert NotKnoBlockOwner();
         }
-        if (KnoBlock.Cancelled == true) {
-            revert KnoBlockCancelled();
+        if (KnoBlock.isCancelled == true) {
+            revert KnoBlockisCancelled();
         }
-        if (KnoBlock.Unlocked != true) {
+        if (KnoBlock.unlocked != true) {
             revert KnoBlockLocked();
         }
         payable(msg.sender).sendValue(KnoBlock.unlockAmount);
-        KnoBlock.Cancelled = true;
+        KnoBlock.isCancelled = true;
     }
 
     //views
@@ -214,11 +214,11 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
         KnoBlockStorage.KnoBlock storage KnoBlock = l.knoBlocks[MAPPING_SLOT][
             blockId
         ];
-        return KnoBlock.Unlocked;
+        return KnoBlock.unlocked;
     }
 
     /**
-     * @notice Returns whether a KnoBlock has been Cancelled
+     * @notice Returns whether a KnoBlock has been cancelled
      * @param blockId The identifier for a KnoBlock Struct
      */
 
@@ -227,7 +227,7 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
         KnoBlockStorage.KnoBlock storage KnoBlock = l.knoBlocks[MAPPING_SLOT][
             blockId
         ];
-        return KnoBlock.Cancelled;
+        return KnoBlock.isCancelled;
     }
 
     /**

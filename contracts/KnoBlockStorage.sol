@@ -10,8 +10,8 @@ library KnoBlockStorage {
         uint256 unlockAmount;
         uint256 currentAmount;
         IKnoBlockInternal.KnoType knoType;
-        bool Unlocked;
-        bool Cancelled;
+        bool unlocked;
+        bool isCancelled;
         mapping(address => uint256) deposits;
     }
 

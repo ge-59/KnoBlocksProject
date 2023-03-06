@@ -9,7 +9,7 @@ interface IKnoBlockInternal {
     error KnoBlockUnlocked();
     error InvalidAmount();
     error NotKnoBlockOwner();
-    error KnoBlockCancelled();
+    error KnoBlockisCancelled();
     error KnoBlockLocked();
 
     enum KnoType {
