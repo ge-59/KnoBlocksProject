@@ -6,10 +6,10 @@ import { KnoBlockInternal } from './KnoBlockInternal.sol';
 
 abstract contract IKnoBlockIO is KnoBlockInternal {
     /**
-     * @notice Creates a new KnoBlock
-     * @dev Utilizes count variable to determine the blockId of the new Block
-     * @param unlockAmount The desired Ether Amount for the KnoBlock to Unlock
-     * @param knoType The type of information [PDF, MP4, Doc]
+     * @notice creates a new KnoBlock
+     * @dev utilizes count variable to determine the blockId of the new Block
+     * @param unlockAmount the desired Ether Amount for the KnoBlock to Unlock
+     * @param knoType the type of information [PDF, MP4, Doc]
      */
     function create(
         uint256 unlockAmount,
@@ -17,28 +17,28 @@ abstract contract IKnoBlockIO is KnoBlockInternal {
     ) external payable virtual;
 
     /**
-     * @notice Deposits donation for a given KnoBlock
-     * @dev Returns potential Overkill of deposit
-     * @param blockId The identifier for a KnoBlock Struct
+     * @notice deposits donation for a given KnoBlock
+     * @dev returns potential Overkill of deposit
+     * @param blockId the identifier for a KnoBlock Struct
      */
     function deposit(uint256 blockId) external payable virtual;
 
     /**
-     * @notice Withdraws donation from a given KnoBlock
-     * @param blockId The identifier for a KnoBlock Struct
-     * @param amount The desired withdraw amount
+     * @notice withdraws donation from a given KnoBlock
+     * @param blockId the identifier for a KnoBlock Struct
+     * @param amount the desired withdraw amount
      */
     function withdraw(uint256 blockId, uint256 amount) external virtual;
 
     /**
-     * @notice Cancels a KnoBlock
-     * @param blockId The identifier for a KnoBlock Struct
+     * @notice cancels a KnoBlock
+     * @param blockId the identifier for a KnoBlock Struct
      */
     function cancel(uint256 blockId) external virtual;
 
     /**
-     * @notice For the creater to claim earnings from an Unlocked KnoBlock
-     * @param blockId The identifier for a KnoBlock Struct
+     * @notice for the creater to claim earnings from an Unlocked KnoBlock
+     * @param blockId the identifier for a KnoBlock Struct
      */
     function claim(uint256 blockId) external virtual;
 }
