@@ -39,10 +39,6 @@ contract KnoBlockView is KnoBlockInternal {
         _knoType(blockId);
     }
 
-    function unlocked(uint256 blockId) external view returns (bool) {
-        _unlocked(blockId);
-    }
-
     function cancelled(uint256 blockId) external view returns (bool) {
         _cancelled(blockId);
     }

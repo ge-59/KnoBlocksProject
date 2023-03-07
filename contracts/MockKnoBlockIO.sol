@@ -49,14 +49,6 @@ contract MockKnoBlockIO is KnoBlockIO {
         return uint256(myKnoBlock.knoType);
     }
 
-    function MockUnlocked(uint256 blockId) public view returns (bool) {
-        KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[MAPPING_SLOT][
-            blockId
-        ];
-        return myKnoBlock.unlocked;
-    }
-
     function MockCancelled(uint256 blockId) public view returns (bool) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
         KnoBlockStorage.KnoBlock storage myKnoBlock = l.knoBlocks[MAPPING_SLOT][
