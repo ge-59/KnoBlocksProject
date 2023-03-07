@@ -6,11 +6,11 @@ import { IKnoBlockInternal } from './IKnoBlockInternal.sol';
 
 library KnoBlockStorage {
     struct KnoBlock {
-        address creator;
         uint256 unlockAmount;
         uint256 currentAmount;
-        IKnoBlockInternal.KnoType knoType;
+        address creator;
         bool isCancelled;
+        IKnoBlockInternal.KnoType knoType;
         mapping(address => uint256) deposits;
     }
 
