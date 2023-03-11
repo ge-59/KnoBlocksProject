@@ -143,7 +143,7 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
      * @notice returns a KnoBlock's Creator
      * @param blockId the identifier for a KnoBlock Struct
      */
-   
+
     function _creator(uint256 blockId) internal view returns (address blocker) {
         KnoBlockStorage.KnoBlock storage KnoBlock = KnoBlockStorage
             .layout()
@@ -155,7 +155,9 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
      * @notice returns the total amount for a KnoBlock to Unlock
      * @param blockId the identifier for a KnoBlock Struct
      */
-    function _unlockAmount(uint256 blockId) internal view returns (uint256 amount) {
+    function _unlockAmount(
+        uint256 blockId
+    ) internal view returns (uint256 amount) {
         KnoBlockStorage.KnoBlock storage KnoBlock = KnoBlockStorage
             .layout()
             .knoBlocks[MAPPING_SLOT][blockId];
@@ -167,7 +169,9 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
      * @param blockId the identifier for a KnoBlock Struct
      */
 
-    function _currentAmount(uint256 blockId) internal view returns (uint256 amount) {
+    function _currentAmount(
+        uint256 blockId
+    ) internal view returns (uint256 amount) {
         KnoBlockStorage.KnoBlock storage KnoBlock = KnoBlockStorage
             .layout()
             .knoBlocks[MAPPING_SLOT][blockId];
@@ -203,7 +207,10 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
      * @param blockId the identifier for a KnoBlock Struct
      */
 
-    function _deposits(uint256 blockId, address account) internal view returns (uint256 amount) {
+    function _deposits(
+        uint256 blockId,
+        address account
+    ) internal view returns (uint256 amount) {
         KnoBlockStorage.KnoBlock storage KnoBlock = KnoBlockStorage
             .layout()
             .knoBlocks[MAPPING_SLOT][blockId];

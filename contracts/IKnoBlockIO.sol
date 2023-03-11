@@ -2,19 +2,16 @@
 
 pragma solidity ^0.8.8;
 
-import {IKnoBlockInternal} from './IKnoBlockInternal.sol';
+import { IKnoBlockInternal } from './IKnoBlockInternal.sol';
 
-interface IKnoBlockIO is IKnoBlockInternal{
+interface IKnoBlockIO is IKnoBlockInternal {
     /**
      * @notice creates a new KnoBlock
      * @dev utilizes count variable to determine the blockId of the new Block
      * @param unlockAmount the desired Ether Amount for the KnoBlock to Unlock
      * @param knoType the type of information [PDF, MP4, Doc]
      */
-    function create(
-        uint256 unlockAmount,
-        KnoType knoType
-    ) external payable;
+    function create(uint256 unlockAmount, KnoType knoType) external payable;
 
     /**
      * @notice deposits donation for a given KnoBlock
