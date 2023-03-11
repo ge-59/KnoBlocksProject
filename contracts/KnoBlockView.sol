@@ -38,7 +38,7 @@ contract KnoBlockView is KnoBlockInternal {
         _cancelled(blockId);
     }
 
-    function deposits(uint256 blockId) external view returns (uint256 amount) {
-        _deposits(blockId);
+    function deposits(uint256 blockId, address account) external view returns (uint256 amount) {
+        _deposits(blockId, account);
     }
 }
