@@ -30,7 +30,7 @@ contract KnoBlockView is KnoBlockInternal {
 
     function knoType(
         uint256 blockId
-    ) external view returns (IKnoBlockInternal.KnoType) {
+    ) external view returns (uint256) {
        return _knoType(blockId);
     }
 
