@@ -18,24 +18,24 @@ interface IKnoBlockIO is IKnoBlockInternal {
      * @dev returns potential Overkill of deposit
      * @param blockId the identifier for a KnoBlock Struct
      */
-    function deposit(uint256 blockId) external payable virtual;
+    function deposit(uint256 blockId) external payable;
 
     /**
      * @notice withdraws donation from a given KnoBlock
      * @param blockId the identifier for a KnoBlock Struct
      * @param amount the desired withdraw amount
      */
-    function withdraw(uint256 blockId, uint256 amount) external virtual;
+    function withdraw(uint256 blockId, uint256 amount) external;
 
     /**
      * @notice cancels a KnoBlock
      * @param blockId the identifier for a KnoBlock Struct
      */
-    function cancel(uint256 blockId) external virtual;
+    function cancel(uint256 blockId) external;
 
     /**
      * @notice for the creater to claim earnings from an Unlocked KnoBlock
      * @param blockId the identifier for a KnoBlock Struct
      */
-    function claim(uint256 blockId) external virtual;
+    function claim(uint256 blockId) external;
 }

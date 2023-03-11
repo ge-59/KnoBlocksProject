@@ -23,21 +23,21 @@ contract KnoBlockIO is KnoBlockInternal, IKnoBlockIO {
     /**
      * @inheritdoc IKnoBlockIO
      */
-    function withdraw(uint256 blockId, uint256 amount) external override {
+    function withdraw(uint256 blockId, uint256 amount) external {
         _withdraw(blockId, amount);
     }
 
     /**
      * @inheritdoc IKnoBlockIO
      */
-    function cancel(uint256 blockId) external override {
+    function cancel(uint256 blockId) external {
         _cancel(blockId);
     }
 
     /**
      * @inheritdoc IKnoBlockIO
      */
-    function claim(uint256 blockId) external override {
+    function claim(uint256 blockId) external {
         _claim(blockId);
     }
 }
