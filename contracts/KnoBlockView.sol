@@ -7,15 +7,10 @@ import { IKnoBlockInternal } from './IKnoBlockInternal.sol';
 import { KnoBlockStorage } from './KnoBlockStorage.sol';
 
 contract KnoBlockView is KnoBlockInternal {
-    function getKnoBlock(
-        uint256 blockId
-    ) external view returns (KnoBlockStorage.KnoBlock storage knoBlock) {
-        _getBlock(blockId);
-    }
-
+   
     function count() external view returns (uint256) {
-        _count();
-    }
+       return _count();
+    } //////////
 
     function owned() external view returns (address) {
         _owned();
@@ -39,11 +34,11 @@ contract KnoBlockView is KnoBlockInternal {
         _knoType(blockId);
     }
 
-    function cancelled(uint256 blockId) external view returns (bool) {
+    function cancelled(uint256 blockId) external view returns (bool status) {
         _cancelled(blockId);
     }
 
-    function deposits(uint256 blockId) external view returns (uint256) {
+    function deposits(uint256 blockId) external view returns (uint256 amount) {
         _deposits(blockId);
     }
 }

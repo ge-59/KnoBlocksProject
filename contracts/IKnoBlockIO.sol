@@ -2,9 +2,9 @@
 
 pragma solidity ^0.8.8;
 
-import { KnoBlockInternal } from './KnoBlockInternal.sol';
+import {IKnoBlockInternal} from './IKnoBlockInternal.sol';
 
-abstract contract IKnoBlockIO is KnoBlockInternal {
+interface IKnoBlockIO is IKnoBlockInternal{
     /**
      * @notice creates a new KnoBlock
      * @dev utilizes count variable to determine the blockId of the new Block
@@ -14,7 +14,7 @@ abstract contract IKnoBlockIO is KnoBlockInternal {
     function create(
         uint256 unlockAmount,
         KnoType knoType
-    ) external payable virtual;
+    ) external payable;
 
     /**
      * @notice deposits donation for a given KnoBlock

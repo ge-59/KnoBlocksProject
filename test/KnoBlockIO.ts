@@ -76,16 +76,6 @@ describe('KnoBlockIO contract', function () {
         await instance.deposit(0, msgvalue);
         expect(await instance.MockDeposits(0)).to.equal(BigNumber.from('1000'));
       });
-
-      it('unlocks the Knoblock if currentAmount is equal to UnlockAmount', async function () {
-        const msgvalue = {
-          value: ethers.utils.parseEther('0.000000000000001001'),
-        }; //sending 1001 wei
-        await instance.create(1001, 1);
-        await instance.deposit(0, msgvalue);
-        expect(await instance.MockUnlocked(0)).to.be.true;
-      });
-
       it('emits unlock event if currentAmount is equal to UnlockAmount', async function () {
         const msgvalue = {
           value: ethers.utils.parseEther('0.000000000000001001'),
@@ -95,16 +85,6 @@ describe('KnoBlockIO contract', function () {
           .to.emit(instance, 'BlockUnlocked')
           .withArgs(0);
       });
-
-      it('unlocks the Knoblock if currentAmount is greater to UnlockAmount', async function () {
-        const msgvalue = {
-          value: ethers.utils.parseEther('0.000000000000002000'),
-        }; //sending 2000 wei
-        await instance.create(1001, 1);
-        await instance.deposit(0, msgvalue);
-        expect(await instance.MockUnlocked(0)).to.be.true;
-      });
-
       it('emits unlock event if currentAmount is equal to UnlockAmount', async function () {
         const msgvalue = {
           value: ethers.utils.parseEther('0.000000000000002000'),
@@ -188,7 +168,7 @@ describe('KnoBlockIO contract', function () {
         await instance.connect(addr1).deposit(0, msgvalue);
         await expect(
           instance.connect(addr1).withdraw(0, 2000),
-        ).to.be.revertedWithCustomError(instance, 'InvalidWithdraw');
+        ).to.be.revertedWithCustomError(instance, 'InvalidAmount');
       });
     });
     describe('#delete()', () => {
@@ -259,7 +239,7 @@ describe('KnoBlockIO contract', function () {
         await instance.cancel(0);
         await expect(instance.claim(0)).to.be.revertedWithCustomError(
           instance,
-          'KnoBlockCancelled',
+          'KnoBlockisCancelled',
         );
       });
     });

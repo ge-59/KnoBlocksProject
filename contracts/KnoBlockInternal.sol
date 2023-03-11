@@ -18,18 +18,6 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
     }
 
     /**
-     * @notice returns all information about a given KnoBlock
-     * @dev returns all information about a given KnoBlock
-     * @param blockId the identifier for a KnoBlock Struct
-     * @return knoBlock a KnoBlock Struct
-     */
-    function _getBlock(
-        uint256 blockId
-    ) internal view returns (KnoBlockStorage.KnoBlock storage knoBlock) {
-        knoBlock = KnoBlockStorage.layout().knoBlocks[MAPPING_SLOT][blockId];
-    }
-
-    /**
      * @notice creates a new KnoBlock
      * @dev utilizes count variable to determine the blockId of the new Block
      * @param unlockAmount the desired Ether Amount for the KnoBlock to Unlock
@@ -214,10 +202,10 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
      * @param blockId the identifier for a KnoBlock Struct
      */
 
-    function _deposits(uint256 blockId) internal view returns (uint256) {
+    function _deposits(uint256 blockId, address account) internal view returns (uint256) {
         KnoBlockStorage.KnoBlock storage KnoBlock = KnoBlockStorage
             .layout()
             .knoBlocks[MAPPING_SLOT][blockId];
-        return KnoBlock.deposits[msg.sender];
+        return KnoBlock.deposits[account];
     }
 }
