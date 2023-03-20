@@ -31,28 +31,28 @@ describe('KnoBlockIO contract', function () {
 
     describe('#create()', () => {
       it('increments the count variable by 1', async function () {
-        await instance.create(1001, 1);
+        await instance.create(1001, one);
         expect(await instance.count()).to.equal(one);
       });
 
       it('sets creator as msg.sender', async function () {
-        await instance.create(1001, 1);
+        await instance.create(1001, one);
         expect(await instance.creator(zero)).to.equal(deployer.address);
       });
 
       it('sets unlockAmount to correctly', async function () {
-        await instance.create(1001, 1);
+        await instance.create(1001, one);
         expect(await instance.unlockAmount(zero)).to.equal(
           BigNumber.from('1001'),
         );
       });
 
       it('sets knoType to correctly', async function () {
-        await instance.create(1001, 1);
+        await instance.create(1001, one);
         expect(await instance.knoType(zero)).to.equal(one);
       });
       it('emits new KnoBlock Event', async function () {
-        expect(await instance.create(1001, 1))
+        expect(await instance.create(1001, one))
           .to.emit(instance, 'NewKnoBlock')
           .withArgs(zero);
       });
@@ -62,7 +62,7 @@ describe('KnoBlockIO contract', function () {
         const msgvalue = {
           value: ethers.utils.parseEther('0.000000000000001'),
         }; //sending 1000 wei
-        await instance.create(1001, 1);
+        await instance.create(1001, one);
         await instance.deposit(zero, msgvalue);
         expect(await instance.currentAmount(zero)).to.equal(
           BigNumber.from('1000'),
@@ -72,7 +72,7 @@ describe('KnoBlockIO contract', function () {
         const msgvalue = {
           value: ethers.utils.parseEther('0.000000000000001'),
         }; //sending 1000 wei
-        await instance.create(1001, 1);
+        await instance.create(1001, one);
         await instance.deposit(zero, msgvalue);
         expect(await instance.deposits(zero, deployer.address)).to.equal(
           BigNumber.from('1000'),
@@ -82,7 +82,7 @@ describe('KnoBlockIO contract', function () {
         const msgvalue = {
           value: ethers.utils.parseEther('0.000000000000001001'),
         }; //sending 1001 wei
-        await instance.create(1001, 1);
+        await instance.create(1001, one);
         expect(await instance.deposit(zero, msgvalue))
           .to.emit(instance, 'BlockUnlocked')
           .withArgs(zero);
@@ -91,7 +91,7 @@ describe('KnoBlockIO contract', function () {
         const msgvalue = {
           value: ethers.utils.parseEther('0.000000000000002000'),
         }; //sending 2000 wei
-        await instance.create(1001, 1);
+        await instance.create(1001, one);
         expect(await instance.deposit(zero, msgvalue))
           .to.emit(instance, 'BlockUnlocked')
           .withArgs(zero);
@@ -101,7 +101,7 @@ describe('KnoBlockIO contract', function () {
         const msgvalue = {
           value: ethers.utils.parseEther('0.000000000000002000'),
         }; //sending 2000 wei
-        await instance.create(1001, 1);
+        await instance.create(1001, one);
         expect(await instance.deposit(zero, msgvalue)).to.changeEtherBalance(
           deployer,
           -msgvalue,
@@ -113,7 +113,7 @@ describe('KnoBlockIO contract', function () {
           const msgvalue = {
             value: ethers.utils.parseEther('0.000000000000001001'),
           }; //sending 1001 wei
-          await instance.create(1001, 1);
+          await instance.create(1001, one);
           await instance.deposit(zero, msgvalue);
           await expect(
             instance.connect(addr1).deposit(zero, msgvalue),
@@ -125,7 +125,7 @@ describe('KnoBlockIO contract', function () {
           const msgvalue = {
             value: ethers.utils.parseEther('0.000000000000001000'),
           }; //sending 1000 wei
-          await instance.create(1001, 1);
+          await instance.create(1001, one);
           await instance.connect(addr1).deposit(zero, msgvalue);
           await instance.connect(addr1).withdraw(zero, 1000);
           expect(await instance.currentAmount(zero)).to.equal(zero);
@@ -134,7 +134,7 @@ describe('KnoBlockIO contract', function () {
           const msgvalue = {
             value: ethers.utils.parseEther('0.000000000000001000'),
           }; //sending 1000 wei
-          await instance.create(1001, 1);
+          await instance.create(1001, one);
           await instance.connect(addr1).deposit(zero, msgvalue);
           await instance.connect(addr1).withdraw(zero, 1000);
           expect(await instance.deposits(zero, addr1.address)).to.equal(zero);
@@ -143,7 +143,7 @@ describe('KnoBlockIO contract', function () {
           const msgvalue = {
             value: ethers.utils.parseEther('0.000000000000001000'),
           }; //sending 1000 wei
-          await instance.create(1001, 1);
+          await instance.create(1001, one);
           await instance.connect(addr1).deposit(zero, msgvalue);
           expect(
             await instance.connect(addr1).withdraw(zero, 1000),
@@ -156,7 +156,7 @@ describe('KnoBlockIO contract', function () {
         const msgvalue = {
           value: ethers.utils.parseEther('0.000000000000001001'),
         }; //sending 1001 wei
-        await instance.create(1001, 1);
+        await instance.create(1001, one);
         await instance.connect(addr1).deposit(zero, msgvalue);
         await expect(
           instance.connect(addr1).withdraw(zero, 1001),
@@ -166,7 +166,7 @@ describe('KnoBlockIO contract', function () {
         const msgvalue = {
           value: ethers.utils.parseEther('0.000000000000001000'),
         }; //sending 1000 wei
-        await instance.create(1001, 1);
+        await instance.create(1001, one);
         await instance.connect(addr1).deposit(zero, msgvalue);
         await expect(
           instance.connect(addr1).withdraw(zero, 2000),
@@ -175,14 +175,14 @@ describe('KnoBlockIO contract', function () {
     });
     describe('#delete()', () => {
       it('deletes a KnoBlock', async function () {
-        await instance.create(1001, 1);
+        await instance.create(1001, one);
         await instance.cancel(zero);
         expect(await instance.cancelled(zero)).to.be.true;
       });
     });
     describe('reverts if...', () => {
       it('msg.sendor is not the creator of the KnoBlock', async function () {
-        await instance.connect(addr1).create(1001, 1);
+        await instance.connect(addr1).create(1001, one);
         expect(await instance.cancelled(zero)).to.be.revertedWithCustomError(
           instance,
           'NotKnoBlockOwner',
@@ -191,14 +191,14 @@ describe('KnoBlockIO contract', function () {
     });
     describe('#cancel()', () => {
       it('deletes the KnoBlock', async function () {
-        await instance.create(1001, 1);
+        await instance.create(1001, one);
         await instance.cancel(zero);
-        expect(await instance.cancelled(0)).to.be.true;
+        expect(await instance.cancelled(zero)).to.be.true;
       });
     });
     describe('reverts if...', () => {
       it('msg.sender is not the creator of the KnoBlock', async function () {
-        await instance.create(1001, 1);
+        await instance.create(1001, one);
         await expect(
           instance.connect(addr1).cancel(zero),
         ).to.be.revertedWithCustomError(instance, 'NotKnoBlockOwner');
@@ -207,7 +207,7 @@ describe('KnoBlockIO contract', function () {
         const msgvalue = {
           value: ethers.utils.parseEther('0.000000000000001001'),
         }; //sending 1001 wei
-        await instance.create(1001, 1);
+        await instance.create(1001, one);
         await instance.deposit(zero, msgvalue);
         await expect(instance.cancel(zero)).to.be.revertedWithCustomError(
           instance,
@@ -219,7 +219,7 @@ describe('KnoBlockIO contract', function () {
           const msgvalue = {
             value: ethers.utils.parseEther('0.000000000000001001'),
           }; //sending 1001 wei
-          await instance.create(1001, 1);
+          await instance.create(1001, one);
           await instance.connect(addr1).deposit(zero, msgvalue);
           expect(await instance.claim(zero)).to.changeEtherBalance(
             deployer,
@@ -230,7 +230,7 @@ describe('KnoBlockIO contract', function () {
           const msgvalue = {
             value: ethers.utils.parseEther('0.000000000000001001'),
           }; //sending 1001 wei
-          await instance.create(1001, 1);
+          await instance.create(1001, one);
           await instance.connect(addr1).deposit(zero, msgvalue);
           await instance.claim(zero);
           expect(await instance.cancelled(zero)).to.be.true;
@@ -241,7 +241,7 @@ describe('KnoBlockIO contract', function () {
           const msgvalue = {
             value: ethers.utils.parseEther('0.000000000000001001'),
           }; //sending 1001 wei
-          await instance.create(1001, 1);
+          await instance.create(1001, one);
           await instance.connect(addr1).deposit(zero, msgvalue);
           await expect(
             instance.connect(addr1).claim(zero),
@@ -251,7 +251,7 @@ describe('KnoBlockIO contract', function () {
           const msgvalue = {
             value: ethers.utils.parseEther('0.000000000000001001'),
           }; //sending 1001 wei
-          await instance.create(1001, 1);
+          await instance.create(1001, one);
           await expect(instance.claim(zero)).to.be.revertedWithCustomError(
             instance,
             'KnoBlockLocked',
@@ -261,7 +261,7 @@ describe('KnoBlockIO contract', function () {
           const msgvalue = {
             value: ethers.utils.parseEther('0.000000000000001000'),
           }; //sending 1000 wei
-          await instance.create(1001, 1);
+          await instance.create(1001, one);
           await instance.connect(addr1).deposit(zero, msgvalue);
           await instance.cancel(zero);
           await expect(instance.claim(zero)).to.be.revertedWithCustomError(
