@@ -3,10 +3,11 @@
 pragma solidity ^0.8.8;
 
 import { KnoBlockIO } from './KnoBlockIO.sol';
+import { KnoBlockView } from './KnoBlockView.sol';
 import { KnoBlockStorage } from './KnoBlockStorage.sol';
 import { OwnableStorage } from '@solidstate/contracts/access/ownable/OwnableStorage.sol';
 
-contract MockKnoBlockIO is KnoBlockIO {
+contract MockKnoBlockIO is KnoBlockIO, KnoBlockView {
     function MockCount() public view returns (uint256) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
         return l.count;
