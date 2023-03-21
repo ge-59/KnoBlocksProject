@@ -6,11 +6,22 @@ import { KnoBlockIO } from './KnoBlockIO.sol';
 import { KnoBlockView } from './KnoBlockView.sol';
 import { KnoBlockStorage } from './KnoBlockStorage.sol';
 import { OwnableStorage } from '@solidstate/contracts/access/ownable/OwnableStorage.sol';
+import { KnoBlockAdmin } from './KnoBlockAdmin.sol';
 
-contract MockKnoBlockIO is KnoBlockIO, KnoBlockView {
+contract MockKnoBlockIO is KnoBlockIO, KnoBlockView, KnoBlockAdmin {
     function MockCount() public view returns (uint256) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
         return l.count;
+    }
+
+    function MockWithdrawFee() public view returns (uint256) {
+        KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
+        return l.withdrawFee;
+    }
+
+    function MockDepositFee() public view returns (uint256) {
+        KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
+        return l.depositFee;
     }
 
     function MockOwner() public view returns (address) {

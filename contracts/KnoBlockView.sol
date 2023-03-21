@@ -5,8 +5,9 @@ pragma solidity ^0.8.8;
 import { KnoBlockInternal } from './KnoBlockInternal.sol';
 import { IKnoBlockInternal } from './IKnoBlockInternal.sol';
 import { KnoBlockStorage } from './KnoBlockStorage.sol';
+import { KnoBlockAdmin } from './KnoBlockAdmin.sol';
 
-contract KnoBlockView is KnoBlockInternal {
+contract KnoBlockView is KnoBlockInternal, KnoBlockAdmin {
     function count() external view returns (uint256 num) {
         return _count();
     }
@@ -44,5 +45,13 @@ contract KnoBlockView is KnoBlockInternal {
         address account
     ) external view returns (uint256 amount) {
         return _deposits(blockId, account);
+    }
+
+    function withdrawFees() external view returns (uint256 fee) {
+        return _withdrawFees();
+    }
+
+    function depositFees() external view returns (uint256 fee) {
+        return _depositFees();
     }
 }
