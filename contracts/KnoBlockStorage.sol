@@ -16,6 +16,8 @@ library KnoBlockStorage {
 
     struct Layout {
         uint256 count;
+        uint256 withdrawFee;
+        uint256 depositFee;
         mapping(uint256 => mapping(uint256 => KnoBlock)) knoBlocks;
     }
 
