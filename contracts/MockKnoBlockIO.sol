@@ -8,7 +8,7 @@ import { KnoBlockStorage } from './KnoBlockStorage.sol';
 import { OwnableStorage } from '@solidstate/contracts/access/ownable/OwnableStorage.sol';
 import { KnoBlockAdmin } from './KnoBlockAdmin.sol';
 
-contract MockKnoBlockIO is KnoBlockIO, KnoBlockView, KnoBlockAdmin {
+contract MockKnoBlockIO is KnoBlockIO, KnoBlockView {
     function MockCount() public view returns (uint256) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
         return l.count;
