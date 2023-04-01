@@ -40,5 +40,18 @@ describe('KnoBlockAdmin contract', function () {
         expect(await instance.depositFees()).to.equal(1000);
       });
     });
+    describe('#withdrawBalance()', function () {
+      it('withdraws contract balance', async function () {
+        const msgvalue = {
+          value: ethers.utils.parseEther('0.000000000000001001'),
+        }; //sending 1001 wei
+        await instance.connect(addr1).create(1001, one);
+        await instance.connect(addr1).deposit(zero, msgvalue);
+        expect(await instance.withdrawBalance).to.changeEtherBalance(
+          deployer,
+          msgvalue,
+        );
+      });
+    });
   });
 });
