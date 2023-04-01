@@ -47,7 +47,7 @@ describe('KnoBlockAdmin contract', function () {
         }; //sending 1001 wei
         await instance.connect(addr1).create(1001, one);
         await instance.connect(addr1).deposit(zero, msgvalue);
-        expect(await instance.withdrawBalance).to.changeEtherBalance(
+        expect(instance.withdrawBalance).to.changeEtherBalance(
           deployer,
           msgvalue,
         );
