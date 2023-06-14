@@ -6,8 +6,9 @@ import { KnoBlockInternal } from './KnoBlockInternal.sol';
 import { IKnoBlockInternal } from './IKnoBlockInternal.sol';
 import { KnoBlockStorage } from './KnoBlockStorage.sol';
 import { KnoBlockAdmin } from './KnoBlockAdmin.sol';
+import { IKnoBlockView } from './IKnoBlockView.sol';
 
-contract KnoBlockView is KnoBlockInternal, KnoBlockAdmin {
+contract KnoBlockView is KnoBlockInternal, KnoBlockAdmin, IKnoBlockView {
     function count() external view returns (uint256 num) {
         return _count();
     }

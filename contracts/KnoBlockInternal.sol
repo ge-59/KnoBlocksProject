@@ -216,4 +216,14 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
             .knoBlocks[MAPPING_SLOT][blockId];
         return KnoBlock.deposits[account];
     }
+
+    function _withdrawFees() internal view returns (uint256 fee) {
+        KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
+        return l.withdrawFee;
+    }
+
+    function _depositFees() internal view returns (uint256 fee) {
+        KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
+        return l.depositFee;
+    }
 }

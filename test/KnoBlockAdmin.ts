@@ -24,7 +24,7 @@ describe('KnoBlockAdmin contract', function () {
 
     describe('#ownerSet()', function () {
       it('sets the right owner', async function () {
-        await instance.ownerSet(addr1.address);
+        await instance.setOwner(addr1.address);
         expect(await instance.owned()).to.equal(addr1.address);
       });
     });
