@@ -42,10 +42,10 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
      * @param blockId the identifier for a KnoBlock Struct
      */
     function _deposit(uint256 blockId, uint256 amount) internal {
-        // add amount
-        KnoBlockStorage.KnoBlock storage KnoBlock = KnoBlockStorage
-            .layout()
-            .knoBlocks[MAPPING_SLOT][blockId];
+        KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
+        KnoBlockStorage.KnoBlock storage KnoBlock = l.knoBlocks[MAPPING_SLOT][
+            blockId
+        ];
         if (KnoBlock.currentAmount == KnoBlock.unlockAmount) {
             revert KnoBlockUnlocked();
         }
@@ -54,6 +54,9 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
         }
         uint256 blockAmount = KnoBlock.currentAmount;
         uint256 unlockAmount = KnoBlock.unlockAmount;
+        uint256 fee = amount * l.depositFee;
+        l.accruedFees += fee;
+        uint256 amount = amount - fee;
         blockAmount += amount;
         KnoBlock.deposits[msg.sender] += amount;
         KnoBlock.currentAmount = blockAmount;
