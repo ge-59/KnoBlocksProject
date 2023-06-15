@@ -18,7 +18,7 @@ interface IKnoBlockIO is IKnoBlockInternal {
      * @dev returns potential Overkill of deposit
      * @param blockId the identifier for a KnoBlock Struct
      */
-    function deposit(uint256 blockId) external payable;
+    function deposit(uint256 blockId, uint256 amount) external payable;
 
     /**
      * @notice withdraws donation from a given KnoBlock
