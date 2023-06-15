@@ -19,13 +19,13 @@ describe('KnoBlockAdmin contract', function () {
     });
 
     beforeEach(async function () {
-      instance = await new MockKnoBlockIO__factory(deployer).deploy();
+      instance = await new MockKnoBlockIO__factory(deployer).deploy(); //use KnoBlock Admin
     });
 
     describe('#ownerSet()', function () {
       it('sets the right owner', async function () {
-        await instance.setOwner(addr1.address);
-        expect(await instance.owned()).to.equal(addr1.address);
+        await instance.settOwner(addr1.address);
+        expect(await instance.owned()).to.equal(addr1.address); // should be owner
       });
     });
     describe('#setWithdrawFee()', function () {

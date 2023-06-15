@@ -7,26 +7,24 @@ import { OwnableStorage } from '@solidstate/contracts/access/ownable/OwnableStor
 import { AddressUtils } from '@solidstate/contracts/utils/AddressUtils.sol';
 import { KnoBlockStorage } from './KnoBlockStorage.sol';
 import { IKnoBlockAdmin } from './IKnoBlockAdmin.sol';
+import { KnoBlockInternal } from './KnoBlockInternal.sol';
 
-contract KnoBlockAdmin is Ownable, IKnoBlockAdmin {
+contract KnoBlockAdmin is IKnoBlockAdmin, KnoBlockInternal {
     using AddressUtils for address payable;
 
-    function setOwner(address owner) external onlyOwner {
-        OwnableStorage.Layout storage l = OwnableStorage.layout();
-        l.owner = owner;
+    function settOwner(address owner) external onlyOwner {
+        _setOwner(owner);
     }
 
     function setWithdrawFee(uint256 fee) external onlyOwner {
-        KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        l.withdrawFee = fee;
+        _setWithdrawFee(fee);
     }
 
     function setDepositFee(uint256 fee) external onlyOwner {
-        KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        l.depositFee = fee;
+        _setDepositFee(fee);
     }
 
     function withdrawBalance(uint256 amount) external onlyOwner {
-        payable(msg.sender).sendValue(amount);
+        _withdrawBalance(amount);
     }
 }

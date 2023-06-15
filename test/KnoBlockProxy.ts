@@ -69,11 +69,3 @@ describe('KnoBlockProxy', function () {
     });
   });
 });
-
-ethers.getContractAt 
-
-wrap diamond 
-
-if (!receipt.status) {
-  throw Error(`Diamond upgrade failed: ${tx.hash}`);
-}

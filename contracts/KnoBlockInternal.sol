@@ -8,6 +8,7 @@ import { OwnableStorage } from '@solidstate/contracts/access/ownable/OwnableStor
 import { IKnoBlockInternal } from './IKnoBlockInternal.sol';
 import { AddressUtils } from '@solidstate/contracts/utils/AddressUtils.sol';
 
+
 abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
     using AddressUtils for address payable;
 
@@ -41,7 +42,7 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
      * @dev returns potential Overkill of deposit
      * @param blockId the identifier for a KnoBlock Struct
      */
-    function _deposit(uint256 blockId) internal {
+    function _deposit(uint256 blockId) internal { // add amount
         KnoBlockStorage.KnoBlock storage KnoBlock = KnoBlockStorage
             .layout()
             .knoBlocks[MAPPING_SLOT][blockId];
@@ -64,6 +65,7 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
             payable(msg.sender).sendValue(blockAmount - unlockAmount);
         }
     }
+
 
     /**
      * @notice withdraws donation from a given KnoBlock
@@ -122,6 +124,27 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
         KnoBlock.isCancelled = true;
         payable(msg.sender).sendValue(KnoBlock.unlockAmount);
     }
+
+    //admin 
+
+function _settOwner(address owner) internal onlyOwner {
+        OwnableStorage.Layout storage l = OwnableStorage.layout();
+        l.owner = owner;
+    } 
+
+     function _setWithdrawFee(uint256 fee) internal onlyOwner {
+        KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
+        l.withdrawFee = fee;
+    }
+ function _setDepositFee(uint256 fee) internal onlyOwner {
+        KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
+        l.depositFee = fee;
+    }
+
+     function _withdrawBalance(uint256 amount) internal onlyOwner {
+        payable(msg.sender).sendValue(amount);
+    }
+
 
     //views
 
