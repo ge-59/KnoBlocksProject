@@ -46,7 +46,7 @@ describe('KnoBlockAdmin contract', function () {
           value: ethers.utils.parseEther('0.000000000000001001'),
         }; //sending 1001 wei
         await instance.connect(addr1).create(1001, one);
-        await instance.connect(addr1).deposit(zero, msgvalue);
+        await instance.connect(addr1).deposit(zero, 1001, msgvalue);
         expect(instance.withdrawBalance).to.changeEtherBalance(
           deployer,
           msgvalue,
