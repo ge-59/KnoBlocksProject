@@ -72,20 +72,25 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
      * @param blockId the identifier for a KnoBlock Struct
      * @param amount the desired withdraw amount
      */
-    function _withdraw(uint256 blockId, uint256 amount) internal {
-        KnoBlockStorage.KnoBlock storage KnoBlock = KnoBlockStorage
-            .layout()
-            .knoBlocks[MAPPING_SLOT][blockId];
+   function _withdraw(uint256 blockId, uint256 amount) internal {
+        KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
+        KnoBlockStorage.KnoBlock storage KnoBlock = l.knoBlocks[MAPPING_SLOT][
+            blockId
+        ];
         if (KnoBlock.currentAmount == KnoBlock.unlockAmount) {
             revert KnoBlockUnlocked();
         }
         if (KnoBlock.deposits[msg.sender] < amount) {
             revert InvalidAmount();
         }
+        uint256 fee = amount * l.withdrawFee;
+        l.accruedFees += fee;
+        uint256 amount = amount - fee;
         KnoBlock.currentAmount -= amount;
         KnoBlock.deposits[msg.sender] -= amount;
         payable(msg.sender).sendValue(amount);
     }
+
 
     /**
      * @notice cancels a KnoBlock
