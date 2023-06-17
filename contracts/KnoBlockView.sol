@@ -55,4 +55,8 @@ contract KnoBlockView is KnoBlockInternal, KnoBlockAdmin, IKnoBlockView {
     function depositFees() external view returns (uint256 fee) {
         return _depositFees();
     }
+
+    function feesCollected() external view returns (uint256 total) {
+        return _feesCollected();
+    }
 }

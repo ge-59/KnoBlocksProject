@@ -29,4 +29,6 @@ interface IKnoBlockView {
     function withdrawFees() external view returns (uint256 fee);
 
     function depositFees() external view returns (uint256 fee);
+
+    function feesCollected() external view returns (uint256 total);
 }

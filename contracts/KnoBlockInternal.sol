@@ -256,4 +256,9 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
         return l.depositFee;
     }
+
+    function _feesCollected() internal view returns (uint256 total) {
+        KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
+        return l.accruedFees;
+    }
 }
