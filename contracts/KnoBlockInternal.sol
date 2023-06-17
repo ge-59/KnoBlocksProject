@@ -148,8 +148,9 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
         l.depositFee = fee;
     }
 
-    function _withdrawBalance(uint256 amount) internal onlyOwner {
-        payable(msg.sender).sendValue(amount);
+    function _withdrawBalance() internal onlyOwner {
+        KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
+        payable(msg.sender).sendValue(l.accruedFees);
     }
 
     //views
