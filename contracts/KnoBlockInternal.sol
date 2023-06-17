@@ -131,7 +131,7 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
         payable(msg.sender).sendValue(KnoBlock.unlockAmount);
     }
 
-    //admin
+    //Admin Functions
 
     function _settOwner(address owner) internal onlyOwner {
         OwnableStorage.Layout storage l = OwnableStorage.layout();

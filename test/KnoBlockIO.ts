@@ -59,9 +59,6 @@ describe('KnoBlockIO contract', function () {
     });
     describe('#deposit()', () => {
       it('increases the KnoBlocks currentAmount by msg.value', async function () {
-        const msgvalue = {
-          value: ethers.utils.parseEther('0.000000000000001'),
-        }; //sending 1000 wei
         await instance.create(1001, one);
         await instance.deposit(zero, 1000);
         expect(await instance.currentAmount(zero)).to.equal(
@@ -69,9 +66,6 @@ describe('KnoBlockIO contract', function () {
         );
       });
       it('updates msg.senders deposit value accurately', async function () {
-        const msgvalue = {
-          value: ethers.utils.parseEther('0.000000000000001'),
-        }; //sending 1000 wei
         await instance.create(1001, one);
         await instance.deposit(zero, 1000);
         expect(await instance.deposits(zero, deployer.address)).to.equal(
@@ -79,9 +73,6 @@ describe('KnoBlockIO contract', function () {
         );
       });
       it('emits unlock event if currentAmount is equal to UnlockAmount', async function () {
-        const msgvalue = {
-          value: ethers.utils.parseEther('0.000000000000001001'),
-        }; //sending 1001 wei
         await instance.create(1001, one);
         expect(await instance.deposit(zero, 1001))
           .to.emit(instance, 'BlockUnlocked')
@@ -92,7 +83,7 @@ describe('KnoBlockIO contract', function () {
           value: ethers.utils.parseEther('0.000000000000002000'),
         }; //sending 2000 wei
         await instance.create(1001, one);
-        expect(await instance.deposit(zero, 2000, msgvalue)) //why no work if remove msgvalue
+        expect(await instance.deposit(zero, 2000, msgvalue))
           .to.emit(instance, 'BlockUnlocked')
           .withArgs(zero);
       });
@@ -109,9 +100,6 @@ describe('KnoBlockIO contract', function () {
 
       describe('reverts if...', () => {
         it('fails transaction in KnoBlock is already Unlocked', async function () {
-          const msgvalue = {
-            value: ethers.utils.parseEther('0.000000000000001001'),
-          }; //sending 1001 wei
           await instance.create(1001, one);
           await instance.deposit(zero, 1001);
           await expect(
@@ -248,9 +236,6 @@ describe('KnoBlockIO contract', function () {
           ).to.be.revertedWithCustomError(instance, 'NotKnoBlockOwner');
         });
         it('KnoBlock is still locked', async function () {
-          const msgvalue = {
-            value: ethers.utils.parseEther('0.000000000000001001'),
-          }; //sending 1001 wei
           await instance.create(1001, one);
           await expect(instance.claim(zero)).to.be.revertedWithCustomError(
             instance,
