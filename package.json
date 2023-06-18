@@ -17,6 +17,7 @@
     "wow"
   ],
   "scripts": {
+    "compile": "hardhat compile",
     "prepare": "husky install",
     "prettier": "prettier --write --ignore-path .gitignore ."
   },

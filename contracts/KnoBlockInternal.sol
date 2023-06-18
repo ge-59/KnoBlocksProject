@@ -12,6 +12,7 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
     using AddressUtils for address payable;
 
     uint256 internal constant MAPPING_SLOT = 0;
+    uint16 internal constant BASIS = 10000;
 
     constructor() {
         _setOwner(msg.sender);
@@ -46,6 +47,7 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
         KnoBlockStorage.KnoBlock storage KnoBlock = l.knoBlocks[MAPPING_SLOT][
             blockId
         ];
+
         if (KnoBlock.currentAmount == KnoBlock.unlockAmount) {
             revert KnoBlockUnlocked();
         }
@@ -56,7 +58,7 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
         uint256 unlockAmount = KnoBlock.unlockAmount;
         uint256 fee = amount * l.depositFee;
         l.accruedFees += fee;
-        uint256 amount = amount - fee;
+        amount -= fee;
         blockAmount += amount;
         KnoBlock.deposits[msg.sender] += amount;
         KnoBlock.currentAmount = blockAmount;
@@ -133,11 +135,6 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
 
     //Admin Functions
 
-    function _settOwner(address owner) internal onlyOwner {
-        OwnableStorage.Layout storage l = OwnableStorage.layout();
-        l.owner = owner;
-    }
-
     function _setWithdrawFee(uint256 fee) internal onlyOwner {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
         l.withdrawFee = fee;
@@ -162,11 +159,6 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
     function _count() internal view returns (uint256 num) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
         return l.count;
-    }
-
-    function _owned() internal view returns (address owner) {
-        OwnableStorage.Layout storage l = OwnableStorage.layout();
-        return l.owner;
     }
 
     /**

@@ -6,10 +6,12 @@ import { IKnoBlockInternal } from './IKnoBlockInternal.sol';
 import { IKnoBlockIO } from './IKnoBlockIO.sol';
 import { IKnoBlockAdmin } from './IKnoBlockAdmin.sol';
 import { IKnoBlockView } from './IKnoBlockView.sol';
+import { IOwnable } from '@solidstate/contracts/access/ownable/IOwnable.sol';
 
 interface IKnoBlock is
     IKnoBlockInternal,
     IKnoBlockIO,
     IKnoBlockAdmin,
-    IKnoBlockView
+    IKnoBlockView,
+    IOwnable
 {}
