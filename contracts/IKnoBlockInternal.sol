@@ -11,6 +11,7 @@ interface IKnoBlockInternal {
     error NotKnoBlockOwner();
     error KnoBlockisCancelled();
     error KnoBlockLocked();
+    error FeeOver100();
 
     enum KnoType {
         PDF,

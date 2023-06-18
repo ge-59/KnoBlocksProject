@@ -16,8 +16,8 @@ contract KnoBlockIO is KnoBlockInternal, IKnoBlockIO {
     /**
      * @inheritdoc IKnoBlockIO
      */
-    function deposit(uint256 blockId, uint256 amount) external payable {
-        _deposit(blockId, amount);
+    function deposit(uint256 blockId) external payable {
+        _deposit(blockId);
     }
 
     /**

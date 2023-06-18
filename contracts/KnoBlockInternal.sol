@@ -42,12 +42,11 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
      * @dev returns potential Overkill of deposit
      * @param blockId the identifier for a KnoBlock Struct
      */
-    function _deposit(uint256 blockId, uint256 amount) internal {
+    function _deposit(uint256 blockId) internal {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
         KnoBlockStorage.KnoBlock storage KnoBlock = l.knoBlocks[MAPPING_SLOT][
             blockId
         ];
-
         if (KnoBlock.currentAmount == KnoBlock.unlockAmount) {
             revert KnoBlockUnlocked();
         }
@@ -56,11 +55,11 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
         }
         uint256 blockAmount = KnoBlock.currentAmount;
         uint256 unlockAmount = KnoBlock.unlockAmount;
-        uint256 fee = amount * l.depositFee;
+        uint256 fee = (msg.value * l.depositFee) / 100;
         l.accruedFees += fee;
-        amount -= fee;
-        blockAmount += amount;
-        KnoBlock.deposits[msg.sender] += amount;
+        uint256 deposit = msg.value - fee;
+        blockAmount += deposit;
+        KnoBlock.deposits[msg.sender] += deposit;
         KnoBlock.currentAmount = blockAmount;
         if (blockAmount >= unlockAmount) {
             emit BlockUnlocked(blockId);
@@ -87,7 +86,7 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
         if (KnoBlock.deposits[msg.sender] < amount) {
             revert InvalidAmount();
         }
-        uint256 fee = amount * l.withdrawFee;
+        uint256 fee = (amount * l.withdrawFee) / 100;
         l.accruedFees += fee;
         uint256 amount = amount - fee;
         KnoBlock.currentAmount -= amount;
@@ -137,11 +136,17 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
 
     function _setWithdrawFee(uint256 fee) internal onlyOwner {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
+        if (fee > 100) {
+            revert FeeOver100();
+        }
         l.withdrawFee = fee;
     }
 
     function _setDepositFee(uint256 fee) internal onlyOwner {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
+        if (fee > 100) {
+            revert FeeOver100();
+        }
         l.depositFee = fee;
     }
 
