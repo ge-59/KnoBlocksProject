@@ -4,15 +4,26 @@ import {
   KnoBlockIOBehaviorArgs,
   describeBehaviorOfKnoBlockIO,
 } from '../test/KnoBlockIO';
+import {
+  KnoBlockAdminBehaviorArgs,
+  describeBehaviorOfKnoBlockAdmin,
+} from '../test/KnoBlockAdmin';
+import {
+  KnoBlockViewBehaviorArgs,
+  describeBehaviorOfKnoBlockView,
+} from '../test/KnoBlockView';
 
-export interface KnoBlockProxyBehaviorArgs extends KnoBlockIOBehaviorArgs {}
+export interface KnoBlockProxyBehaviorArgs
+  extends KnoBlockIOBehaviorArgs,
+    KnoBlockAdminBehaviorArgs,
+    KnoBlockViewBehaviorArgs {}
 
 export function describeBehaviorOfKnoBlockProxy(
   deploy: () => Promise<IKnoBlock>,
 ) {
   describe('::KnoBlockProxy', () => {
     describeBehaviorOfKnoBlockIO(deploy);
-    // describeBehaviorOfKnoBlockAdmin();
-    // describeBehaviorOfKnoBlockView();
+    describeBehaviorOfKnoBlockAdmin(deploy);
+    describeBehaviorOfKnoBlockView(deploy);
   });
 }

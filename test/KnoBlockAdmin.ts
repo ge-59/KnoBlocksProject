@@ -1,57 +1,65 @@
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
-import { MockKnoBlockIO, MockKnoBlockIO__factory } from '../typechain-types';
+import {
+  IKnoBlock,
+  MockKnoBlockIO,
+  MockKnoBlockIO__factory,
+} from '../typechain-types';
 import { ethers } from 'hardhat';
 import { BigNumber, ContractTransaction } from 'ethers';
 import { expect } from 'chai';
 
-describe('KnoBlockAdmin contract', function () {
-  describe('KnoBlockAdmin', function () {
-    let deployer: SignerWithAddress;
-    let addr1: SignerWithAddress;
-    let addr2: SignerWithAddress;
-    let instance: MockKnoBlockIO;
+export interface KnoBlockAdminBehaviorArgs {}
 
-    const zero = ethers.constants.Zero;
-    const one = ethers.constants.One;
+export function describeBehaviorOfKnoBlockAdmin(
+  deploy: () => Promise<IKnoBlock>,
+) {
+  describe('KnoBlockAdmin contract', function () {
+    describe('KnoBlockAdmin', function () {
+      let deployer: SignerWithAddress;
+      let addr1: SignerWithAddress;
+      let addr2: SignerWithAddress;
+      let instance: IKnoBlock;
 
-    before(async function () {
-      [deployer, addr1, addr2] = await ethers.getSigners();
-    });
+      const zero = ethers.constants.Zero;
+      const one = ethers.constants.One;
 
-    beforeEach(async function () {
-      instance = await new MockKnoBlockIO__factory(deployer).deploy(); //use KnoBlock Admin
-    });
-
-    describe('#ownerSet()', function () {
-      it('sets the right owner', async function () {
-        await instance.settOwner(addr1.address);
-        expect(await instance.owned()).to.equal(addr1.address); // should be owner
+      before(async function () {
+        [deployer, addr1, addr2] = await ethers.getSigners();
       });
-    });
-    describe('#setWithdrawFee()', function () {
-      it('sets the withdraw fee', async function () {
-        await instance.setWithdrawFee(1000);
-        expect(await instance.withdrawFees()).to.equal(1000);
+
+      beforeEach(async function () {
+        instance = await deploy();
       });
-    });
-    describe('#setDepositFee()', function () {
-      it('sets the deposit fee', async function () {
-        await instance.setDepositFee(1000);
-        expect(await instance.depositFees()).to.equal(1000);
+
+      describe('#ownerSet()', function () {
+        it('sets the right owner', async function () {
+          await instance.setOwner(addr1.address);
+          expect(await instance.owner()).to.equal(addr1.address);
+        });
       });
-    });
-    describe('#withdrawBalance()', function () {
-      it('withdraws contract balance', async function () {
-        const msgvalue = {
-          value: ethers.utils.parseEther('0.000000000000001001'),
-        }; //sending 1001 wei
-        await instance.connect(addr1).create(1001, one);
-        await instance.connect(addr1).deposit(zero, 1001, msgvalue);
-        expect(instance.withdrawBalance).to.changeEtherBalance(
-          deployer,
-          msgvalue,
-        );
+      describe('#setWithdrawFee()', function () {
+        it('sets the withdraw fee', async function () {
+          await instance.setWithdrawFee(5);
+          expect(await instance.withdrawFees()).to.equal(5);
+        });
+      });
+      describe('#setDepositFee()', function () {
+        it('sets the deposit fee', async function () {
+          await instance.setDepositFee(5);
+          expect(await instance.depositFees()).to.equal(5);
+        });
+      });
+      describe('#withdrawBalance()', function () {
+        it('withdraws contract balance', async function () {
+          const msgvalue = ethers.utils.parseUnits('1001', 0);
+          await instance.connect(addr1).create(1001, one);
+          await instance.connect(addr1).deposit(zero, { value: msgvalue });
+          expect(instance.withdrawBalance).to.changeEtherBalance(
+            deployer,
+            msgvalue,
+          );
+        });
       });
     });
   });
-});
+}

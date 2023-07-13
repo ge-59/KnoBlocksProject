@@ -29,7 +29,7 @@ describe('KnoBlockProxy', function () {
   before(async function () {
     [deployer, addr1, addr2] = await ethers.getSigners();
 
-    diamond = await new KnoBlockDiamond__factory(deployer).deploy(1000, 1000);
+    diamond = await new KnoBlockDiamond__factory(deployer).deploy(0, 0);
 
     const FacetCuts = [
       await new KnoBlockIO__factory(deployer).deploy(),

@@ -47,23 +47,33 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
         KnoBlockStorage.KnoBlock storage KnoBlock = l.knoBlocks[MAPPING_SLOT][
             blockId
         ];
+
         if (KnoBlock.currentAmount == KnoBlock.unlockAmount) {
             revert KnoBlockUnlocked();
         }
         if (KnoBlock.isCancelled == true) {
-            revert KnoBlockisCancelled();
+            revert KnoBlockCancelled();
         }
+
         uint256 blockAmount = KnoBlock.currentAmount;
         uint256 unlockAmount = KnoBlock.unlockAmount;
-        uint256 fee = (msg.value * l.depositFee) / 100;
-        l.accruedFees += fee;
-        uint256 deposit = msg.value - fee;
-        blockAmount += deposit;
-        KnoBlock.deposits[msg.sender] += deposit;
+        uint256 depositedAmount = msg.value;
+
+        if (l.depositFee != 0) {
+            uint256 amount = depositedAmount;
+            uint256 fee = (amount * l.depositFee) / BASIS;
+            l.accruedFees += fee;
+            depositedAmount = (amount - fee);
+        }
+
+        blockAmount += depositedAmount;
+        KnoBlock.deposits[msg.sender] += depositedAmount;
         KnoBlock.currentAmount = blockAmount;
+
         if (blockAmount >= unlockAmount) {
             emit BlockUnlocked(blockId);
         }
+
         if (blockAmount > unlockAmount) {
             KnoBlock.currentAmount = unlockAmount;
             payable(msg.sender).sendValue(blockAmount - unlockAmount);
@@ -86,12 +96,18 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
         if (KnoBlock.deposits[msg.sender] < amount) {
             revert InvalidAmount();
         }
-        uint256 fee = (amount * l.withdrawFee) / 100;
-        l.accruedFees += fee;
-        uint256 amount = amount - fee;
+
         KnoBlock.currentAmount -= amount;
         KnoBlock.deposits[msg.sender] -= amount;
-        payable(msg.sender).sendValue(amount);
+        uint256 withdrawAmount = amount;
+
+        if (l.withdrawFee != 0) {
+            uint256 fee = (amount * l.withdrawFee) / BASIS;
+            l.accruedFees += fee;
+            withdrawAmount -= fee;
+        }
+
+        payable(msg.sender).sendValue(withdrawAmount);
     }
 
     /**
@@ -123,7 +139,7 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
             revert NotKnoBlockOwner();
         }
         if (KnoBlock.isCancelled == true) {
-            revert KnoBlockisCancelled();
+            revert KnoBlockCancelled();
         }
         if (KnoBlock.currentAmount != KnoBlock.unlockAmount) {
             revert KnoBlockLocked();
@@ -136,16 +152,16 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
 
     function _setWithdrawFee(uint256 fee) internal onlyOwner {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        if (fee > 100) {
-            revert FeeOver100();
+        if (fee > 10000) {
+            revert FeeOver10000();
         }
         l.withdrawFee = fee;
     }
 
     function _setDepositFee(uint256 fee) internal onlyOwner {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        if (fee > 100) {
-            revert FeeOver100();
+        if (fee > 10000) {
+            revert FeeOver10000();
         }
         l.depositFee = fee;
     }
