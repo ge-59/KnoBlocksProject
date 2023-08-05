@@ -17,8 +17,8 @@ import { describeBehaviorOfKnoBlockProxy } from '../spec/KnoBlockProxy.behavior'
 
 describe('KnoBlockProxy', function () {
   let deployer: SignerWithAddress;
-  let addr1: SignerWithAddress;
-  let addr2: SignerWithAddress;
+  let bob: SignerWithAddress;
+  let alice: SignerWithAddress;
   let diamond: KnoBlockDiamond;
   let snapshotId: number;
   let instance: IKnoBlock;
@@ -27,7 +27,7 @@ describe('KnoBlockProxy', function () {
   const one = ethers.constants.One;
 
   before(async function () {
-    [deployer, addr1, addr2] = await ethers.getSigners();
+    [deployer, bob, alice] = await ethers.getSigners();
 
     diamond = await new KnoBlockDiamond__factory(deployer).deploy(0, 0);
 

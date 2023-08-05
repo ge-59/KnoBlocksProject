@@ -11,15 +11,15 @@ export function describeBehaviorOfKnoBlockView(
   describe('KnoBlockView contract', function () {
     describe('KnoBlockView', function () {
       let deployer: SignerWithAddress;
-      let addr1: SignerWithAddress;
-      let addr2: SignerWithAddress;
+      let bob: SignerWithAddress;
+      let alice: SignerWithAddress;
       let instance: IKnoBlock;
 
       const zero = ethers.constants.Zero;
       const one = ethers.constants.One;
 
       before(async function () {
-        [deployer, addr1, addr2] = await ethers.getSigners();
+        [deployer, bob, alice] = await ethers.getSigners();
       });
 
       beforeEach(async function () {
@@ -34,8 +34,8 @@ export function describeBehaviorOfKnoBlockView(
       });
       describe('#creator()', function () {
         it('returns creator', async function () {
-          await instance.connect(addr1).create(1001, one);
-          expect(await instance.creator(0)).to.equal(addr1.address);
+          await instance.connect(bob).create(1001, one);
+          expect(await instance.creator(0)).to.equal(bob.address);
         });
       });
       describe('#unlockAmount()', function () {
@@ -69,8 +69,8 @@ export function describeBehaviorOfKnoBlockView(
         it('returns deposits', async function () {
           const msgvalue = ethers.utils.parseUnits('1000', 0);
           await instance.create(1001, one);
-          await instance.connect(addr1).deposit(zero, { value: msgvalue });
-          expect(await instance.deposits(0, addr1.address)).to.equal(1000);
+          await instance.connect(bob).deposit(zero, { value: msgvalue });
+          expect(await instance.deposits(0, bob.address)).to.equal(1000);
         });
       });
       describe('#withdrawFeeBP()', function () {
@@ -90,7 +90,7 @@ export function describeBehaviorOfKnoBlockView(
           const msgvalue = ethers.utils.parseUnits('1000', 0);
           await instance.create(1001, one);
           await instance.setDepositFeeBP(500);
-          await instance.connect(addr1).deposit(zero, { value: msgvalue });
+          await instance.connect(bob).deposit(zero, { value: msgvalue });
           expect(await instance.feesCollected()).to.equal(50);
         });
       });

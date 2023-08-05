@@ -12,15 +12,15 @@ export function describeBehaviorOfKnoBlockAdmin(
   describe('KnoBlockAdmin contract', function () {
     describe('KnoBlockAdmin', function () {
       let deployer: SignerWithAddress;
-      let addr1: SignerWithAddress;
-      let addr2: SignerWithAddress;
+      let bob: SignerWithAddress;
+      let alice: SignerWithAddress;
       let instance: IKnoBlock;
 
       const zero = ethers.constants.Zero;
       const one = ethers.constants.One;
 
       before(async function () {
-        [deployer, addr1, addr2] = await ethers.getSigners();
+        [deployer, bob, alice] = await ethers.getSigners();
       });
 
       beforeEach(async function () {
@@ -29,8 +29,8 @@ export function describeBehaviorOfKnoBlockAdmin(
 
       describe('#setOwner()', function () {
         it('sets the right owner', async function () {
-          await instance.setOwner(addr1.address);
-          expect(await instance.owner()).to.equal(addr1.address);
+          await instance.setOwner(bob.address);
+          expect(await instance.owner()).to.equal(bob.address);
         });
       });
       describe('#setWithdrawFeeBP()', function () {
@@ -48,8 +48,8 @@ export function describeBehaviorOfKnoBlockAdmin(
       describe('#withdrawBalance()', function () {
         it('withdraws contract balance', async function () {
           const msgvalue = ethers.utils.parseUnits('1001', 0);
-          await instance.connect(addr1).create(1001, one);
-          await instance.connect(addr1).deposit(zero, { value: msgvalue });
+          await instance.connect(bob).create(1001, one);
+          await instance.connect(bob).deposit(zero, { value: msgvalue });
           expect(instance.withdrawBalance).to.changeEtherBalance(
             deployer,
             msgvalue,
