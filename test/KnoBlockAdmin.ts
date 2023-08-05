@@ -27,7 +27,7 @@ export function describeBehaviorOfKnoBlockAdmin(
         instance = await deploy();
       });
 
-      describe('#ownerSet()', function () {
+      describe('#setOwner()', function () {
         it('sets the right owner', async function () {
           await instance.setOwner(addr1.address);
           expect(await instance.owner()).to.equal(addr1.address);

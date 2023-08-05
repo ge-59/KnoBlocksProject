@@ -51,7 +51,7 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
         if (KnoBlock.currentAmount == KnoBlock.unlockAmount) {
             revert KnoBlockUnlocked();
         }
-        if (KnoBlock.isCancelled == true) {
+        if (KnoBlock.isCancelled) {
             revert KnoBlockCancelled();
         }
 

@@ -43,14 +43,14 @@ export function describeBehaviorOfKnoBlockIO(deploy: () => Promise<IKnoBlock>) {
           expect(await instance.creator(zero)).to.equal(deployer.address);
         });
 
-        it('sets unlockAmount to correctly', async function () {
+        it('sets unlockAmount correctly', async function () {
           await instance.create(1001, one);
           expect(await instance.unlockAmount(zero)).to.equal(
             BigNumber.from('1001'),
           );
         });
 
-        it('sets knoType to correctly', async function () {
+        it('sets knoType correctly', async function () {
           await instance.create(1001, one);
           expect(await instance.knoType(zero)).to.equal(one);
         });
