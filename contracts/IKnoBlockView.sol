@@ -24,9 +24,9 @@ interface IKnoBlockView {
         address account
     ) external view returns (uint256 amount);
 
-    function withdrawFees() external view returns (uint256 fee);
+    function withdrawFeeBP() external view returns (uint256 feeBP);
 
-    function depositFees() external view returns (uint256 fee);
+    function depositFeeBP() external view returns (uint256 feeBP);
 
     function feesCollected() external view returns (uint256 total);
 }

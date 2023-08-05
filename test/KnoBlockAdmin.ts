@@ -1,9 +1,5 @@
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
-import {
-  IKnoBlock,
-  MockKnoBlockIO,
-  MockKnoBlockIO__factory,
-} from '../typechain-types';
+import { IKnoBlock } from '../typechain-types';
 import { ethers } from 'hardhat';
 import { BigNumber, ContractTransaction } from 'ethers';
 import { expect } from 'chai';
@@ -37,16 +33,16 @@ export function describeBehaviorOfKnoBlockAdmin(
           expect(await instance.owner()).to.equal(addr1.address);
         });
       });
-      describe('#setWithdrawFee()', function () {
+      describe('#setWithdrawFeeBP()', function () {
         it('sets the withdraw fee', async function () {
-          await instance.setWithdrawFee(5);
-          expect(await instance.withdrawFees()).to.equal(5);
+          await instance.setWithdrawFeeBP(5);
+          expect(await instance.withdrawFeeBP()).to.equal(5);
         });
       });
-      describe('#setDepositFee()', function () {
+      describe('#setDepositFeeBP()', function () {
         it('sets the deposit fee', async function () {
-          await instance.setDepositFee(5);
-          expect(await instance.depositFees()).to.equal(5);
+          await instance.setDepositFeeBP(5);
+          expect(await instance.depositFeeBP()).to.equal(5);
         });
       });
       describe('#withdrawBalance()', function () {

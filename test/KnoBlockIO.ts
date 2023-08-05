@@ -64,12 +64,13 @@ export function describeBehaviorOfKnoBlockIO(deploy: () => Promise<IKnoBlock>) {
         it('increases the KnoBlocks currentAmount by msg.value - fee', async function () {
           const msgvalue = ethers.utils.parseUnits('1001', 0);
           await instance.create(1001, one);
-          await instance.setDepositFee(185);
+          await instance.setDepositFeeBP(185);
           await instance.deposit(zero, { value: msgvalue });
 
           const depositedAmount = msgvalue;
           const fee = depositedAmount.mul(185).div(10000);
           const expectedNetAmount = depositedAmount.sub(fee);
+
           expect(await instance.currentAmount(zero)).to.equal(
             expectedNetAmount,
           );
@@ -77,13 +78,13 @@ export function describeBehaviorOfKnoBlockIO(deploy: () => Promise<IKnoBlock>) {
         it('updates msg.senders deposit value accurately', async function () {
           const msgvalue = ethers.utils.parseUnits('1001', 0);
           await instance.create(1001, one);
-          await instance.setDepositFee(185);
+          await instance.setDepositFeeBP(185);
           await instance.deposit(zero, { value: msgvalue });
 
           const depositedAmount = msgvalue;
           const fee = depositedAmount.mul(185).div(10000);
           const expectedNetAmount = depositedAmount.sub(fee);
-          //console.log(await instance.deposits(0, deployer.address));
+
           expect(await instance.deposits(zero, deployer.address)).to.equal(
             expectedNetAmount,
           );
@@ -91,7 +92,7 @@ export function describeBehaviorOfKnoBlockIO(deploy: () => Promise<IKnoBlock>) {
         it('emits unlock event if currentAmount is equal to UnlockAmount', async function () {
           const msgvalue = ethers.utils.parseUnits('10001', 0);
           await instance.create(1001, one);
-          await instance.setDepositFee(185);
+          await instance.setDepositFeeBP(185);
           await expect(instance.deposit(zero, { value: msgvalue }))
             .to.emit(instance, 'BlockUnlocked')
             .withArgs(zero);
@@ -100,7 +101,7 @@ export function describeBehaviorOfKnoBlockIO(deploy: () => Promise<IKnoBlock>) {
           const msgvalue = ethers.utils.parseUnits('2000', 0);
           const unlockAmount = ethers.utils.parseUnits('1001', 0);
           await instance.create(1001, one);
-          await instance.setDepositFee(185);
+          await instance.setDepositFeeBP(185);
 
           // To calculate change in users Balance
           const fee = msgvalue.mul(185).div(10000);
@@ -114,7 +115,7 @@ export function describeBehaviorOfKnoBlockIO(deploy: () => Promise<IKnoBlock>) {
           it('fails transaction in KnoBlock is already Unlocked', async function () {
             const msgvalue = ethers.utils.parseUnits('2000', 0);
             await instance.create(1001, one);
-            await instance.setDepositFee(185);
+            await instance.setDepositFeeBP(185);
             await instance.deposit(zero, { value: msgvalue });
             await expect(
               instance.connect(addr1).deposit(zero, { value: msgvalue }),
@@ -126,8 +127,7 @@ export function describeBehaviorOfKnoBlockIO(deploy: () => Promise<IKnoBlock>) {
         it('reduces KnoBlocks currentAmount by amount withdrawn', async function () {
           const msgvalue = ethers.utils.parseUnits('1000', 0);
           await instance.create(10000, one);
-          await instance.setDepositFee(0);
-          await instance.setWithdrawFee(185);
+          await instance.setWithdrawFeeBP(185);
           await instance.connect(addr1).deposit(zero, { value: msgvalue });
           await instance.connect(addr1).withdraw(zero, 1000);
           expect(await instance.currentAmount(zero)).to.equal(zero);
@@ -135,8 +135,8 @@ export function describeBehaviorOfKnoBlockIO(deploy: () => Promise<IKnoBlock>) {
         it('reduces users deposit amount by withdrawn amount', async function () {
           const msgvalue = ethers.utils.parseUnits('1000', 0);
           await instance.create(1001, one);
-          await instance.setDepositFee(0);
-          await instance.setWithdrawFee(185);
+          await instance.setDepositFeeBP(0);
+          await instance.setWithdrawFeeBP(185);
           await instance.connect(addr1).deposit(zero, { value: msgvalue });
           await instance.connect(addr1).withdraw(zero, 1000);
           expect(await instance.deposits(zero, addr1.address)).to.equal(zero);
@@ -144,8 +144,8 @@ export function describeBehaviorOfKnoBlockIO(deploy: () => Promise<IKnoBlock>) {
         it('transfers withdrawn amount after fee to msg.sender', async function () {
           const msgvalue = ethers.utils.parseUnits('1000', 0);
           await instance.create(1001, one);
-          await instance.setDepositFee(0);
-          await instance.setWithdrawFee(185);
+          await instance.setDepositFeeBP(0);
+          await instance.setWithdrawFeeBP(185);
           await instance.connect(addr1).deposit(zero, { value: msgvalue });
 
           const fee = msgvalue.mul(185).div(10000);
@@ -160,8 +160,8 @@ export function describeBehaviorOfKnoBlockIO(deploy: () => Promise<IKnoBlock>) {
           it('KnoBlock is Currently Unlocked', async function () {
             const msgvalue = ethers.utils.parseUnits('10000', 0);
             await instance.create(1001, one);
-            await instance.setDepositFee(185);
-            await instance.setWithdrawFee(185);
+            await instance.setDepositFeeBP(185);
+            await instance.setWithdrawFeeBP(185);
             await instance.connect(addr1).deposit(zero, { value: msgvalue });
             await expect(
               instance.connect(addr1).withdraw(zero, 1000),
@@ -170,8 +170,8 @@ export function describeBehaviorOfKnoBlockIO(deploy: () => Promise<IKnoBlock>) {
           it('attempted withdrawl is larger the deposit', async function () {
             const msgvalue = ethers.utils.parseUnits('1000', 0);
             await instance.create(1001, one);
-            await instance.setDepositFee(185);
-            await instance.setWithdrawFee(185);
+            await instance.setDepositFeeBP(185);
+            await instance.setWithdrawFeeBP(185);
             await instance.connect(addr1).deposit(zero, { value: msgvalue });
             await expect(
               instance.connect(addr1).withdraw(zero, 2000),
@@ -195,7 +195,7 @@ export function describeBehaviorOfKnoBlockIO(deploy: () => Promise<IKnoBlock>) {
           it('KnoBlock has been unlocked', async function () {
             const msgvalue = ethers.utils.parseUnits('10000', 0);
             await instance.create(1001, one);
-            await instance.setDepositFee(185);
+            await instance.setDepositFeeBP(185);
             await instance.deposit(zero, { value: msgvalue });
             await expect(instance.cancel(zero)).to.be.revertedWithCustomError(
               instance,
@@ -209,7 +209,7 @@ export function describeBehaviorOfKnoBlockIO(deploy: () => Promise<IKnoBlock>) {
           const msgvalue = ethers.utils.parseUnits('10000', 0);
           const expectedAmount = ethers.utils.parseUnits('1001', 0);
           await instance.create(1001, one);
-          await instance.setDepositFee(185);
+          await instance.setDepositFeeBP(185);
           await instance.connect(addr1).deposit(zero, { value: msgvalue });
           await expect(instance.claim(zero)).to.changeEtherBalance(
             deployer,
@@ -219,7 +219,7 @@ export function describeBehaviorOfKnoBlockIO(deploy: () => Promise<IKnoBlock>) {
         it('deletes the KnoBlock', async function () {
           const msgvalue = ethers.utils.parseUnits('2000', 0);
           await instance.create(1001, one);
-          await instance.setDepositFee(185);
+          await instance.setDepositFeeBP(185);
           await instance.connect(addr1).deposit(zero, { value: msgvalue });
           await instance.claim(zero);
           expect(await instance.cancelled(zero)).to.be.true;
@@ -229,7 +229,7 @@ export function describeBehaviorOfKnoBlockIO(deploy: () => Promise<IKnoBlock>) {
           it('msg.sender is not the creator of the KnoBlock', async function () {
             const msgvalue = ethers.utils.parseUnits('2000', 0);
             await instance.create(1001, one);
-            await instance.setDepositFee(185);
+            await instance.setDepositFeeBP(185);
             await instance.connect(addr1).deposit(zero, { value: msgvalue });
             await expect(
               instance.connect(addr1).claim(zero),
@@ -245,7 +245,7 @@ export function describeBehaviorOfKnoBlockIO(deploy: () => Promise<IKnoBlock>) {
           it('KnoBlock is deleted', async function () {
             const msgvalue = ethers.utils.parseUnits('1000', 0);
             await instance.create(1001, one);
-            await instance.setDepositFee(185);
+            await instance.setDepositFeeBP(185);
             await instance.connect(addr1).deposit(zero, { value: msgvalue });
             await instance.cancel(zero);
             await expect(instance.claim(zero)).to.be.revertedWithCustomError(

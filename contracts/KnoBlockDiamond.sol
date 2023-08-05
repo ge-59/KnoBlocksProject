@@ -6,15 +6,9 @@ import { SolidStateDiamond } from '@solidstate/contracts/proxy/diamond/SolidStat
 import { KnoBlockStorage } from './KnoBlockStorage.sol';
 
 contract KnoBlockDiamond is SolidStateDiamond {
-    constructor(uint256 withdrawToll, uint256 depositToll) {
-        // if (withdrawToll > 100) {
-        //     revert FeeOver100();
-        // }
-        // if (depositToll > 100) {
-        //     revert FeeOver100();
-        // }
+    constructor(uint256 withdrawFeeBP, uint256 depositFeeBP) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        l.withdrawFee = withdrawToll;
-        l.depositFee = depositToll;
+        l.withdrawFeeBP = withdrawFeeBP;
+        l.depositFeeBP = depositFeeBP;
     }
 }

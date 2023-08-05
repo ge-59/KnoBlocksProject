@@ -12,12 +12,12 @@ contract KnoBlockAdmin is IKnoBlockAdmin, KnoBlockInternal {
         _setOwner(owner);
     }
 
-    function setWithdrawFee(uint256 fee) external onlyOwner {
-        _setWithdrawFee(fee);
+    function setWithdrawFeeBP(uint256 feeBP) external onlyOwner {
+        _setWithdrawFeeBP(feeBP);
     }
 
-    function setDepositFee(uint256 fee) external onlyOwner {
-        _setDepositFee(fee);
+    function setDepositFeeBP(uint256 feeBP) external onlyOwner {
+        _setDepositFeeBP(feeBP);
     }
 
     function withdrawBalance() external onlyOwner {

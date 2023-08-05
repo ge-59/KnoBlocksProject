@@ -59,9 +59,9 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
         uint256 unlockAmount = KnoBlock.unlockAmount;
         uint256 depositedAmount = msg.value;
 
-        if (l.depositFee != 0) {
+        if (l.depositFeeBP != 0) {
             uint256 amount = depositedAmount;
-            uint256 fee = (amount * l.depositFee) / BASIS;
+            uint256 fee = (amount * l.depositFeeBP) / BASIS;
             l.accruedFees += fee;
             depositedAmount = (amount - fee);
         }
@@ -101,8 +101,8 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
         KnoBlock.deposits[msg.sender] -= amount;
         uint256 withdrawAmount = amount;
 
-        if (l.withdrawFee != 0) {
-            uint256 fee = (amount * l.withdrawFee) / BASIS;
+        if (l.withdrawFeeBP != 0) {
+            uint256 fee = (amount * l.withdrawFeeBP) / BASIS;
             l.accruedFees += fee;
             withdrawAmount -= fee;
         }
@@ -150,20 +150,20 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
 
     //Admin Functions
 
-    function _setWithdrawFee(uint256 fee) internal onlyOwner {
+    function _setWithdrawFeeBP(uint256 feeBP) internal onlyOwner {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        if (fee > 10000) {
-            revert FeeOver10000();
+        if (feeBP > 10000) {
+            revert Basis_Exceeded();
         }
-        l.withdrawFee = fee;
+        l.withdrawFeeBP = feeBP;
     }
 
-    function _setDepositFee(uint256 fee) internal onlyOwner {
+    function _setDepositFeeBP(uint256 feeBP) internal onlyOwner {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        if (fee > 10000) {
-            revert FeeOver10000();
+        if (feeBP > 10000) {
+            revert Basis_Exceeded();
         }
-        l.depositFee = fee;
+        l.depositFeeBP = feeBP;
     }
 
     function _withdrawBalance() internal onlyOwner {
@@ -260,14 +260,14 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
         return KnoBlock.deposits[account];
     }
 
-    function _withdrawFees() internal view returns (uint256 fee) {
+    function _withdrawFeeBP() internal view returns (uint256 feeBP) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        return l.withdrawFee;
+        return l.withdrawFeeBP;
     }
 
-    function _depositFees() internal view returns (uint256 fee) {
+    function _depositFeeBP() internal view returns (uint256 feeBP) {
         KnoBlockStorage.Layout storage l = KnoBlockStorage.layout();
-        return l.depositFee;
+        return l.depositFeeBP;
     }
 
     function _feesCollected() internal view returns (uint256 total) {

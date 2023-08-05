@@ -43,12 +43,12 @@ contract KnoBlockView is KnoBlockInternal, IKnoBlockView {
         amount = _deposits(blockId, account);
     }
 
-    function withdrawFees() external view returns (uint256 fee) {
-        fee = _withdrawFees();
+    function withdrawFeeBP() external view returns (uint256 feeBP) {
+        feeBP = _withdrawFeeBP();
     }
 
-    function depositFees() external view returns (uint256 fee) {
-        fee = _depositFees();
+    function depositFeeBP() external view returns (uint256 feeBP) {
+        feeBP = _depositFeeBP();
     }
 
     function feesCollected() external view returns (uint256 total) {

@@ -73,23 +73,23 @@ export function describeBehaviorOfKnoBlockView(
           expect(await instance.deposits(0, addr1.address)).to.equal(1000);
         });
       });
-      describe('#withdrawFees()', function () {
-        it('returns withdrawFees', async function () {
-          await instance.setWithdrawFee(500);
-          expect(await instance.withdrawFees()).to.equal(500);
+      describe('#withdrawFeeBP()', function () {
+        it('returns withdrawFeeBP', async function () {
+          await instance.setWithdrawFeeBP(500);
+          expect(await instance.withdrawFeeBP()).to.equal(500);
         });
       });
-      describe('#depositFees()', function () {
-        it('returns depositFees', async function () {
-          await instance.setDepositFee(500);
-          expect(await instance.depositFees()).to.equal(500);
+      describe('#depositFeeBP()', function () {
+        it('returns depositFeeBP', async function () {
+          await instance.setDepositFeeBP(500);
+          expect(await instance.depositFeeBP()).to.equal(500);
         });
       });
       describe('#feesCollected()', function () {
         it('returns feesCollected', async function () {
           const msgvalue = ethers.utils.parseUnits('1000', 0);
           await instance.create(1001, one);
-          await instance.setDepositFee(500);
+          await instance.setDepositFeeBP(500);
           await instance.connect(addr1).deposit(zero, { value: msgvalue });
           expect(await instance.feesCollected()).to.equal(50);
         });
