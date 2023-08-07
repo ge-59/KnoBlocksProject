@@ -55,28 +55,27 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
             revert KnoBlockCancelled();
         }
 
-        uint256 blockAmount = KnoBlock.currentAmount;
-        uint256 unlockAmount = KnoBlock.unlockAmount;
         uint256 depositedAmount = msg.value;
 
         if (l.depositFeeBP != 0) {
-            uint256 amount = depositedAmount;
-            uint256 fee = (amount * l.depositFeeBP) / BASIS;
+            uint256 fee = (depositedAmount * l.depositFeeBP) / BASIS;
             l.accruedFees += fee;
-            depositedAmount = (amount - fee);
+            depositedAmount -= fee;
         }
 
-        blockAmount += depositedAmount;
+        uint256 currentAmount = KnoBlock.currentAmount;
+        uint256 unlockAmount = KnoBlock.unlockAmount;
+        currentAmount += depositedAmount;
         KnoBlock.deposits[msg.sender] += depositedAmount;
-        KnoBlock.currentAmount = blockAmount;
+        KnoBlock.currentAmount = currentAmount;
 
-        if (blockAmount >= unlockAmount) {
+        if (currentAmount >= unlockAmount) {
             emit BlockUnlocked(blockId);
         }
 
-        if (blockAmount > unlockAmount) {
+        if (currentAmount > unlockAmount) {
             KnoBlock.currentAmount = unlockAmount;
-            payable(msg.sender).sendValue(blockAmount - unlockAmount);
+            payable(msg.sender).sendValue(currentAmount - unlockAmount);
         }
     }
 
@@ -138,7 +137,7 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
         if (KnoBlock.creator != msg.sender) {
             revert NotKnoBlockOwner();
         }
-        if (KnoBlock.isCancelled == true) {
+        if (KnoBlock.isCancelled) {
             revert KnoBlockCancelled();
         }
         if (KnoBlock.currentAmount != KnoBlock.unlockAmount) {
