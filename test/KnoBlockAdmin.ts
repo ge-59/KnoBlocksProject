@@ -29,20 +29,22 @@ export function describeBehaviorOfKnoBlockAdmin(
 
       describe('#setOwner()', function () {
         it('sets the right owner', async function () {
-          await instance.setOwner(bob.address);
-          expect(await instance.owner()).to.equal(bob.address);
+          await instance.connect(deployer).setOwner(bob.address);
+          expect(await instance.connect(deployer).owner()).to.equal(
+            bob.address,
+          );
         });
       });
       describe('#setWithdrawFeeBP()', function () {
         it('sets the withdraw fee', async function () {
-          await instance.setWithdrawFeeBP(5);
-          expect(await instance.withdrawFeeBP()).to.equal(5);
+          await instance.connect(deployer).setWithdrawFeeBP(5);
+          expect(await instance.connect(deployer).withdrawFeeBP()).to.equal(5);
         });
       });
       describe('#setDepositFeeBP()', function () {
         it('sets the deposit fee', async function () {
-          await instance.setDepositFeeBP(5);
-          expect(await instance.depositFeeBP()).to.equal(5);
+          await instance.connect(deployer).setDepositFeeBP(5);
+          expect(await instance.connect(deployer).depositFeeBP()).to.equal(5);
         });
       });
       describe('#withdrawBalance()', function () {
@@ -50,10 +52,9 @@ export function describeBehaviorOfKnoBlockAdmin(
           const msgvalue = ethers.utils.parseUnits('1001', 0);
           await instance.connect(bob).create(1001, one);
           await instance.connect(bob).deposit(zero, { value: msgvalue });
-          expect(instance.withdrawBalance).to.changeEtherBalance(
-            deployer,
-            msgvalue,
-          );
+          expect(
+            instance.connect(deployer).withdrawBalance,
+          ).to.changeEtherBalance(deployer, msgvalue);
         });
       });
     });
