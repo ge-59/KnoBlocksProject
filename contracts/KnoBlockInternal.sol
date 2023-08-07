@@ -98,15 +98,14 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
 
         KnoBlock.currentAmount -= amount;
         KnoBlock.deposits[msg.sender] -= amount;
-        uint256 withdrawAmount = amount;
 
         if (l.withdrawFeeBP != 0) {
             uint256 fee = (amount * l.withdrawFeeBP) / BASIS;
             l.accruedFees += fee;
-            withdrawAmount -= fee;
+            amount -= fee;
         }
 
-        payable(msg.sender).sendValue(withdrawAmount);
+        payable(msg.sender).sendValue(amount);
     }
 
     /**
