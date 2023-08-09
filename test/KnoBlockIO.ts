@@ -143,7 +143,6 @@ export function describeBehaviorOfKnoBlockIO(deploy: () => Promise<IKnoBlock>) {
         it('reduces users deposit amount by withdrawn amount', async function () {
           const msgvalue = ethers.utils.parseUnits('1000', 0);
           await instance.connect(deployer).create(1001, one);
-          await instance.connect(deployer).setDepositFeeBP(0);
           await instance.connect(deployer).setWithdrawFeeBP(185);
           await instance.connect(bob).deposit(zero, { value: msgvalue });
           await instance.connect(bob).withdraw(zero, 1000);
@@ -154,7 +153,6 @@ export function describeBehaviorOfKnoBlockIO(deploy: () => Promise<IKnoBlock>) {
         it('transfers withdrawn amount after fee to msg.sender', async function () {
           const msgvalue = ethers.utils.parseUnits('1000', 0);
           await instance.connect(deployer).create(1001, one);
-          await instance.connect(deployer).setDepositFeeBP(0);
           await instance.connect(deployer).setWithdrawFeeBP(185);
           await instance.connect(bob).deposit(zero, { value: msgvalue });
 
