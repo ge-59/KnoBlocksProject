@@ -16,6 +16,7 @@ export function describeBehaviorOfKnoBlockIO(deploy: () => Promise<IKnoBlock>) {
 
       const zero = ethers.constants.Zero;
       const one = ethers.constants.One;
+      const BASIS = 10000;
 
       before(async function () {
         [deployer, bob, alice] = await ethers.getSigners();
@@ -69,9 +70,9 @@ export function describeBehaviorOfKnoBlockIO(deploy: () => Promise<IKnoBlock>) {
           await instance.connect(deployer).setDepositFeeBP(185);
           await instance.connect(deployer).deposit(zero, { value: msgvalue });
 
-          const depositedAmount = msgvalue;
-          const fee = depositedAmount.mul(185).div(10000);
-          const expectedNetAmount = depositedAmount.sub(fee);
+          const feeBP = await instance.connect(deployer).depositFeeBP();
+          const fee = msgvalue.mul(feeBP).div(BASIS);
+          const expectedNetAmount = msgvalue.sub(fee);
 
           expect(await instance.connect(deployer).currentAmount(zero)).to.equal(
             expectedNetAmount,
@@ -83,9 +84,9 @@ export function describeBehaviorOfKnoBlockIO(deploy: () => Promise<IKnoBlock>) {
           await instance.connect(deployer).setDepositFeeBP(185);
           await instance.connect(deployer).deposit(zero, { value: msgvalue });
 
-          const depositedAmount = msgvalue;
-          const fee = depositedAmount.mul(185).div(10000);
-          const expectedNetAmount = depositedAmount.sub(fee);
+          const feeBP = await instance.connect(deployer).depositFeeBP();
+          const fee = msgvalue.mul(feeBP).div(BASIS);
+          const expectedNetAmount = msgvalue.sub(fee);
 
           expect(
             await instance.connect(deployer).deposits(zero, deployer.address),
@@ -108,7 +109,8 @@ export function describeBehaviorOfKnoBlockIO(deploy: () => Promise<IKnoBlock>) {
           await instance.connect(deployer).setDepositFeeBP(185);
 
           // To calculate change in users Balance
-          const fee = msgvalue.mul(185).div(10000);
+          const feeBP = await instance.connect(deployer).depositFeeBP();
+          const fee = msgvalue.mul(feeBP).div(BASIS);
           const expectedAmount = unlockAmount.add(fee);
           //
           await expect(
@@ -156,7 +158,8 @@ export function describeBehaviorOfKnoBlockIO(deploy: () => Promise<IKnoBlock>) {
           await instance.connect(deployer).setWithdrawFeeBP(185);
           await instance.connect(bob).deposit(zero, { value: msgvalue });
 
-          const fee = msgvalue.mul(185).div(10000);
+          const feeBP = await instance.connect(deployer).withdrawFeeBP();
+          const fee = msgvalue.mul(feeBP).div(BASIS);
           const expectedAmount = msgvalue.sub(fee);
 
           await expect(
