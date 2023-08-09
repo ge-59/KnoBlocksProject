@@ -132,7 +132,7 @@ export function describeBehaviorOfKnoBlockIO(deploy: () => Promise<IKnoBlock>) {
       describe('#withdraw()', () => {
         it('reduces KnoBlocks currentAmount by amount withdrawn', async function () {
           const msgvalue = ethers.utils.parseUnits('1000', 0);
-          await instance.connect(deployer).create(10000, one);
+          await instance.connect(deployer).create(1001, one);
           await instance.connect(deployer).setWithdrawFeeBP(185);
           await instance.connect(bob).deposit(zero, { value: msgvalue });
           await instance.connect(bob).withdraw(zero, 1000);

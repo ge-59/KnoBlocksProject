@@ -40,11 +40,35 @@ export function describeBehaviorOfKnoBlockAdmin(
           await instance.connect(deployer).setWithdrawFeeBP(5);
           expect(await instance.connect(deployer).withdrawFeeBP()).to.equal(5);
         });
+        describe('reverts if...', () => {
+          it('fee set exceeds BASIS', async function () {
+            await expect(
+              instance.connect(deployer).setWithdrawFeeBP(10001),
+            ).to.be.revertedWithCustomError(instance, 'Basis_Exceeded');
+          });
+          it('used by non-owner', async function () {
+            await expect(
+              instance.connect(bob).setWithdrawFeeBP(5),
+            ).to.be.revertedWithCustomError(instance, 'Ownable__NotOwner');
+          });
+        });
       });
       describe('#setDepositFeeBP()', function () {
         it('sets the deposit fee', async function () {
           await instance.connect(deployer).setDepositFeeBP(5);
           expect(await instance.connect(deployer).depositFeeBP()).to.equal(5);
+        });
+        describe('reverts if...', () => {
+          it('fee set exceeds BASIS', async function () {
+            await expect(
+              instance.connect(deployer).setDepositFeeBP(10001),
+            ).to.be.revertedWithCustomError(instance, 'Basis_Exceeded');
+          });
+          it('used by non-owner', async function () {
+            await expect(
+              instance.connect(bob).setDepositFeeBP(5),
+            ).to.be.revertedWithCustomError(instance, 'Ownable__NotOwner');
+          });
         });
       });
       describe('#withdrawBalance()', function () {
@@ -55,6 +79,13 @@ export function describeBehaviorOfKnoBlockAdmin(
           expect(
             instance.connect(deployer).withdrawBalance,
           ).to.changeEtherBalance(deployer, msgvalue);
+        });
+        describe('reverts if...', () => {
+          it('used by non-owner', async function () {
+            await expect(
+              instance.connect(bob).withdrawBalance,
+            ).to.be.revertedWithCustomError(instance, 'Ownable__NotOwner');
+          });
         });
       });
     });
