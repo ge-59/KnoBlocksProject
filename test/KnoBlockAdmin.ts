@@ -9,7 +9,7 @@ export interface KnoBlockAdminBehaviorArgs {}
 export function describeBehaviorOfKnoBlockAdmin(
   deploy: () => Promise<IKnoBlock>,
 ) {
-  describe('KnoBlockAdmin contract', function () {
+  describe.only('KnoBlockAdmin contract', function () {
     describe('KnoBlockAdmin', function () {
       let deployer: SignerWithAddress;
       let bob: SignerWithAddress;
@@ -18,6 +18,7 @@ export function describeBehaviorOfKnoBlockAdmin(
 
       const zero = ethers.constants.Zero;
       const one = ethers.constants.One;
+      const BASIS = 10000;
 
       before(async function () {
         [deployer, bob, alice] = await ethers.getSigners();
@@ -71,19 +72,24 @@ export function describeBehaviorOfKnoBlockAdmin(
           });
         });
       });
-      describe('#withdrawBalance()', function () {
-        it('withdraws contract balance', async function () {
-          const msgvalue = ethers.utils.parseUnits('1001', 0);
+      describe('#withdrawFees()', function () {
+        it('withdraws accrued fees', async function () {
+          const msgvalue = ethers.utils.parseUnits('1000', 0);
+          await instance.connect(deployer).setDepositFeeBP(1000);
           await instance.connect(bob).create(1001, one);
           await instance.connect(bob).deposit(zero, { value: msgvalue });
-          expect(
-            instance.connect(deployer).withdrawBalance,
-          ).to.changeEtherBalance(deployer, msgvalue);
+
+          const feeBP = await instance.connect(deployer).depositFeeBP();
+          const fee = msgvalue.mul(feeBP).div(BASIS);
+
+          await expect(
+            instance.connect(deployer).withdrawFees,
+          ).to.changeEtherBalance(deployer, fee);
         });
         describe('reverts if...', () => {
           it('used by non-owner', async function () {
             await expect(
-              instance.connect(bob).withdrawBalance,
+              instance.connect(bob).withdrawFees,
             ).to.be.revertedWithCustomError(instance, 'Ownable__NotOwner');
           });
         });

@@ -20,7 +20,7 @@ contract KnoBlockAdmin is IKnoBlockAdmin, KnoBlockInternal {
         _setDepositFeeBP(feeBP);
     }
 
-    function withdrawBalance() external onlyOwner {
-        _withdrawBalance();
+    function withdrawFees() external onlyOwner {
+        _withdrawFees();
     }
 }

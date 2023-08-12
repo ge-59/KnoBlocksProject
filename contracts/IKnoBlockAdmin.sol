@@ -9,5 +9,5 @@ interface IKnoBlockAdmin {
 
     function setDepositFeeBP(uint256 fee) external;
 
-    function withdrawBalance() external;
+    function withdrawFees() external;
 }
