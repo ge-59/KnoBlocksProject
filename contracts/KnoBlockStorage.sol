@@ -4,6 +4,10 @@ pragma solidity ^0.8.8;
 
 import { IKnoBlockInternal } from './IKnoBlockInternal.sol';
 
+/**
+ * @title KnoBlockStorage Library
+ * @notice this library defines the storage layout for the KnoBlock Dapp
+ */
 library KnoBlockStorage {
     struct KnoBlock {
         uint256 unlockAmount;

@@ -2,6 +2,10 @@
 
 pragma solidity ^0.8.8;
 
+/**
+ * @title KnoBlockAdmin Interface
+ * @notice this interface defines administrative functions for managing the KnoBlock Dapp
+ */
 interface IKnoBlockAdmin {
     /**
      * @notice sets a new owner

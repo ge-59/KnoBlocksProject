@@ -2,6 +2,12 @@
 
 pragma solidity ^0.8.8;
 
+/**
+ * @title KnoBlockInternal Interface
+ * @notice this interface defines internal events and error types for the KnoBlock Dapp
+ * along with a KnoType enum representing the different formats of information.
+ */
+
 interface IKnoBlockInternal {
     event KnoBlockCreated(uint256 blockId);
     event BlockUnlocked(uint256 blockId);

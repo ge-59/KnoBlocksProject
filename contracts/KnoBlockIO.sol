@@ -5,6 +5,10 @@ pragma solidity ^0.8.8;
 import { KnoBlockInternal } from './KnoBlockInternal.sol';
 import { IKnoBlockIO } from './IKnoBlockIO.sol';
 
+/**
+ * @title KnoBlockIO Contract
+ * @notice this contract implements the features for the KnoBlock Dapp
+ */
 contract KnoBlockIO is KnoBlockInternal, IKnoBlockIO {
     /**
      * @inheritdoc IKnoBlockIO

@@ -8,6 +8,11 @@ import { OwnableStorage } from '@solidstate/contracts/access/ownable/OwnableStor
 import { IKnoBlockInternal } from './IKnoBlockInternal.sol';
 import { AddressUtils } from '@solidstate/contracts/utils/AddressUtils.sol';
 
+/**
+ * @title KnoBlock internal functions
+ * @dev inherited by all KnoBlock implementation contracts
+ */
+
 abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
     using AddressUtils for address payable;
 

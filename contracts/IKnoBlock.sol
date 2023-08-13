@@ -8,10 +8,17 @@ import { IKnoBlockAdmin } from './IKnoBlockAdmin.sol';
 import { IKnoBlockView } from './IKnoBlockView.sol';
 import { IOwnable } from '@solidstate/contracts/access/ownable/IOwnable.sol';
 
+/**
+ * @title complete KnoBlock interface
+ * @notice this interface aggregates the various interfaces that make up the KnoBlock functionality
+ */
+
 interface IKnoBlock is
     IKnoBlockInternal,
     IKnoBlockIO,
     IKnoBlockAdmin,
     IKnoBlockView,
     IOwnable
-{}
+{
+
+}

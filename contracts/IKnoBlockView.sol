@@ -2,6 +2,10 @@
 
 pragma solidity ^0.8.8;
 
+/**
+ * @title KnoBlockView Interface
+ * @notice this interface provides the read-only functions to retrieve information about the current state of the KnoBlock Dapp
+ */
 interface IKnoBlockView {
     /**
      * @notice returns the variable: Count

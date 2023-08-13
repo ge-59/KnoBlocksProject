@@ -4,6 +4,10 @@ pragma solidity ^0.8.8;
 
 import { IKnoBlockInternal } from './IKnoBlockInternal.sol';
 
+/**
+ * @title KnoBlockIO Interface
+ * @notice this interface defines the core features of the KnoBlock Dapp
+ */
 interface IKnoBlockIO is IKnoBlockInternal {
     /**
      * @notice creates a new KnoBlock
