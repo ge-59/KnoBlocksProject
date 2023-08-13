@@ -199,7 +199,7 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
     }
 
     /**
-     * @notice returns the total amount for a KnoBlock to Unlock
+     * @notice returns the total amount required for a KnoBlock to Unlock
      * @param blockId the identifier for a KnoBlock Struct
      */
     function _unlockAmount(
@@ -252,7 +252,7 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
     }
 
     /**
-     * @notice returns the amoount msg.sender has deposited in a KnoBlock
+     * @notice returns the amount msg.sender has deposited in a KnoBlock
      * @param blockId the identifier for a KnoBlock Struct
      */
 
@@ -266,14 +266,23 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
             ];
     }
 
+    /**
+     * @notice returns the current withdrawFee in BASIS
+     */
     function _withdrawFeeBP() internal view returns (uint256 feeBP) {
         return KnoBlockStorage.layout().withdrawFeeBP;
     }
 
+    /**
+     * @notice returns the current depositFee in BASIS
+     */
     function _depositFeeBP() internal view returns (uint256 feeBP) {
         return KnoBlockStorage.layout().depositFeeBP;
     }
 
+    /**
+     * @notice returns the current of fees accumulated
+     */
     function _feesCollected() internal view returns (uint256 total) {
         return KnoBlockStorage.layout().accruedFees;
     }
