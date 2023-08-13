@@ -8,18 +8,30 @@ import { IKnoBlockAdmin } from './IKnoBlockAdmin.sol';
 import { KnoBlockInternal } from './KnoBlockInternal.sol';
 
 contract KnoBlockAdmin is IKnoBlockAdmin, KnoBlockInternal {
+    /**
+     * @inheritdoc IKnoBlockAdmin
+     */
     function setOwner(address owner) external onlyOwner {
         _setOwner(owner);
     }
 
+    /**
+     * @inheritdoc IKnoBlockAdmin
+     */
     function setWithdrawFeeBP(uint256 feeBP) external onlyOwner {
         _setWithdrawFeeBP(feeBP);
     }
 
+    /**
+     * @inheritdoc IKnoBlockAdmin
+     */
     function setDepositFeeBP(uint256 feeBP) external onlyOwner {
         _setDepositFeeBP(feeBP);
     }
 
+    /**
+     * @inheritdoc IKnoBlockAdmin
+     */
     function withdrawFees() external onlyOwner {
         _withdrawFees();
     }
