@@ -64,7 +64,7 @@ export function describeBehaviorOfKnoBlockIO(deploy: () => Promise<IKnoBlock>) {
         });
       });
       describe('#deposit()', () => {
-        it('increases the KnoBlocks currentAmount by msg.value - fee', async function () {
+        it('increases the KnoBlock`s currentAmount by msg.value - fee', async function () {
           const msgvalue = ethers.utils.parseUnits('1001', 0);
           await instance.connect(deployer).create(1001, one);
           await instance.connect(deployer).setDepositFeeBP(185);
