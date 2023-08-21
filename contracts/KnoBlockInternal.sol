@@ -25,8 +25,8 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
 
     /**
      * @notice creates a new KnoBlock
-     * @dev utilizes count variable to determine the blockId of the new Block
-     * @param unlockAmount the desired Ether Amount for the KnoBlock to Unlock
+     * @dev utilizes count variable to determine the blockId of the new KnoBlock
+     * @param unlockAmount the desired ETH Amount for the KnoBlock to unlock
      * @param knoType the type of information [PDF, MP4, Doc]
      */
     function _create(uint256 unlockAmount, KnoType knoType) internal {
@@ -44,7 +44,7 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
 
     /**
      * @notice deposits donation for a given KnoBlock
-     * @dev returns potential Overkill of deposit
+     * @dev returns any excess ETH past unlockAmount
      * @param blockId the identifier for a KnoBlock Struct
      */
     function _deposit(uint256 blockId) internal {
@@ -85,7 +85,7 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
     }
 
     /**
-     * @notice withdraws donation from a given KnoBlock
+     * @notice withdraws user deposit from a given KnoBlock
      * @param blockId the identifier for a KnoBlock Struct
      * @param amount the desired withdraw amount
      */
@@ -114,7 +114,7 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
     }
 
     /**
-     * @notice cancels a KnoBlock
+     * @notice permenantly cancels a KnoBlock, allowing no actions other than deposit withdrawls by users
      * @param blockId the identifier for a KnoBlock Struct
      */
     function _cancel(uint256 blockId) internal {
@@ -122,7 +122,7 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
             .layout()
             .knoBlocks[MAPPING_SLOT][blockId];
         if (KnoBlock.creator != msg.sender) {
-            revert NotKnoBlockOwner();
+            revert OnlyKnoBlockOwner();
         }
         if (KnoBlock.currentAmount == KnoBlock.unlockAmount) {
             revert KnoBlockClosed();
@@ -131,7 +131,7 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
     }
 
     /**
-     * @notice for the creater to claim earnings from an Unlocked KnoBlock
+     * @notice for the creater to claim earnings from an unlocked KnoBlock
      * @param blockId the identifier for a KnoBlock Struct
      */
     function _claim(uint256 blockId) internal {
@@ -139,7 +139,7 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
             .layout()
             .knoBlocks[MAPPING_SLOT][blockId];
         if (KnoBlock.creator != msg.sender) {
-            revert NotKnoBlockOwner();
+            revert OnlyKnoBlockOwner();
         }
         if (KnoBlock.isCancelled) {
             revert KnoBlockClosed();
@@ -186,7 +186,7 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
     //View Functions
 
     /**
-     * @notice returns the variable: Count
+     * @notice returns the variable: Count, used to set KnoBlock ID's
      */
 
     function _count() internal view returns (uint256 num) {
@@ -194,7 +194,7 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
     }
 
     /**
-     * @notice returns a KnoBlock's Creator
+     * @notice returns a KnoBlock's Creator address
      * @param blockId the identifier for a KnoBlock Struct
      */
 
@@ -204,7 +204,7 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
     }
 
     /**
-     * @notice returns the total amount required for a KnoBlock to Unlock
+     * @notice returns the total amount of ETH required for a KnoBlock to unlock
      * @param blockId the identifier for a KnoBlock Struct
      */
     function _unlockAmount(
@@ -245,7 +245,7 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
     }
 
     /**
-     * @notice returns whether a KnoBlock has been cancelled
+     * @notice returns whether a KnoBlock has been closed (cancelled or completed)
      * @param blockId the identifier for a KnoBlock Struct
      */
 
@@ -286,7 +286,7 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
     }
 
     /**
-     * @notice returns the current of fees accumulated
+     * @notice returns the current amount of ETH accumulated from fees
      */
     function _feesCollected() internal view returns (uint256 total) {
         return KnoBlockStorage.layout().accruedFees;

@@ -7,7 +7,7 @@ import { IKnoBlockIO } from './IKnoBlockIO.sol';
 
 /**
  * @title KnoBlockIO Contract
- * @notice this contract implements the features for the KnoBlock Dapp
+ * @notice diamond facet implementing the user input and output functions of the KnoBlock Dapp
  */
 contract KnoBlockIO is KnoBlockInternal, IKnoBlockIO {
     /**

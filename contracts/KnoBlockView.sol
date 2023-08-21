@@ -9,7 +9,7 @@ import { IKnoBlockView } from './IKnoBlockView.sol';
 
 /**
  * @title KnoBlockView Contract
- * @notice this contract implements the read-only functions to retrieve information about the current state of the KnoBlock Dapp
+ * @notice diamond facet implementing the read-only functions to retrieve information about the current state of the KnoBlock Dapp
  */
 contract KnoBlockView is KnoBlockInternal, IKnoBlockView {
     /**

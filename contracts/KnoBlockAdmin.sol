@@ -9,7 +9,7 @@ import { KnoBlockInternal } from './KnoBlockInternal.sol';
 
 /**
  * @title KnoBlockAdmin Contract
- * @notice this contract implements administrative functions for managing the KnoBlock Dapp
+ * @notice diamond facet implementing administrative functions for managing the KnoBlock Dapp
  */
 
 contract KnoBlockAdmin is IKnoBlockAdmin, KnoBlockInternal {

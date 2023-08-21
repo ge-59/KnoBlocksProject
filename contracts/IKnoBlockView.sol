@@ -8,18 +8,18 @@ pragma solidity ^0.8.8;
  */
 interface IKnoBlockView {
     /**
-     * @notice returns the variable: Count
+     * @notice returns the variable: Count, used to set KnoBlock ID's
      */
     function count() external view returns (uint256 num);
 
     /**
-     * @notice returns a KnoBlock's Creator
+     * @notice returns a KnoBlock's Creator address
      * @param blockId the identifier for a KnoBlock Struct
      */
     function creator(uint256 blockId) external view returns (address blocker);
 
     /**
-     * @notice returns the total amount required for a KnoBlock to Unlock
+     * @notice returns the total amount of ETH required for a KnoBlock to unlock
      * @param blockId the identifier for a KnoBlock Struct
      */
     function unlockAmount(
@@ -41,7 +41,7 @@ interface IKnoBlockView {
     function knoType(uint256 blockId) external view returns (uint256 format);
 
     /**
-     * @notice returns whether a KnoBlock has been cancelled
+     * @notice returns whether a KnoBlock has been closed (cancelled or completed)
      * @param blockId the identifier for a KnoBlock Struct
      */
     function cancelled(uint256 blockId) external view returns (bool status);
@@ -66,7 +66,7 @@ interface IKnoBlockView {
     function depositFeeBP() external view returns (uint256 feeBP);
 
     /**
-     * @notice returns the current of fees accumulated
+     * @notice returns the current amount of ETH accumulated from fees
      */
     function feesCollected() external view returns (uint256 total);
 }

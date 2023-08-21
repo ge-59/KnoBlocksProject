@@ -4,7 +4,7 @@ pragma solidity ^0.8.8;
 
 /**
  * @title KnoBlockInternal Interface
- * @notice this interface defines internal events and error types for the KnoBlock Dapp
+ * @notice this interface contains events and error types for the KnoBlock Dapp
  * along with a KnoType enum representing the different formats of information.
  */
 
@@ -17,17 +17,17 @@ interface IKnoBlockInternal {
 
     /**
      * @dev emitted when a KnoBlock is unlocked
-     * @param blockId the identifier of the KnoBlock
+     * @param blockId the unique identifier of the KnoBlock
      */
     event KnoBlockUnlocked(uint256 blockId);
 
     /**
-     * @dev error thrown when trying to interact with a cancelled or complete KnoBlock
+     * @dev error thrown when attempting actions that are unable to be executed on a cancelled or complete KnoBlock
      */
     error KnoBlockClosed();
 
     /**
-     * @dev error thrown when trying to interact with an incomplete KnoBlock as if it is complete
+     * @dev error thrown when attempting actions that are unable to be executed on an incomplete KnoBlock
      */
     error KnoBlockLocked();
 
@@ -39,7 +39,7 @@ interface IKnoBlockInternal {
     /**
      * @dev error thrown when the caller is not the owner of the KnoBlock
      */
-    error NotKnoBlockOwner();
+    error OnlyKnoBlockOwner();
 
     /**
      * @dev error thrown when the BASIS is exceeded
@@ -47,7 +47,7 @@ interface IKnoBlockInternal {
     error Basis_Exceeded();
 
     /**
-     * @dev enumeration representing different formats of information contained within
+     * @dev enumeration representing different formats of information contained within a KnoBlock
      */
     enum KnoType {
         PDF,
