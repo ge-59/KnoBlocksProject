@@ -19,12 +19,12 @@ interface IKnoBlockInternal {
      * @dev emitted when a KnoBlock is unlocked
      * @param blockId the identifier of the KnoBlock
      */
-    event BlockUnlocked(uint256 blockId);
+    event KnoBlockUnlocked(uint256 blockId);
 
     /**
-     * @dev error thrown when trying to interact with a complete KnoBlock as if it is incomplete
+     * @dev error thrown when trying to interact with a cancelled or complete KnoBlock
      */
-    error KnoBlockUnlocked();
+    error KnoBlockClosed();
 
     /**
      * @dev error thrown when trying to interact with an incomplete KnoBlock as if it is complete
@@ -40,11 +40,6 @@ interface IKnoBlockInternal {
      * @dev error thrown when the caller is not the owner of the KnoBlock
      */
     error NotKnoBlockOwner();
-
-    /**
-     * @dev error thrown when trying to interact with a cancelled KnoBlock
-     */
-    error KnoBlockCancelled();
 
     /**
      * @dev error thrown when the BASIS is exceeded

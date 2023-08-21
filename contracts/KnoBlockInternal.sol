@@ -54,10 +54,10 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
         ];
 
         if (KnoBlock.currentAmount == KnoBlock.unlockAmount) {
-            revert KnoBlockUnlocked();
+            revert KnoBlockClosed();
         }
         if (KnoBlock.isCancelled) {
-            revert KnoBlockCancelled();
+            revert KnoBlockClosed();
         }
 
         uint256 depositedAmount = msg.value;
@@ -75,7 +75,7 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
         KnoBlock.currentAmount = currentAmount;
 
         if (currentAmount >= unlockAmount) {
-            emit BlockUnlocked(blockId);
+            emit KnoBlockUnlocked(blockId);
         }
 
         if (currentAmount > unlockAmount) {
@@ -95,7 +95,7 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
             blockId
         ];
         if (KnoBlock.currentAmount == KnoBlock.unlockAmount) {
-            revert KnoBlockUnlocked();
+            revert KnoBlockClosed();
         }
         if (KnoBlock.deposits[msg.sender] < amount) {
             revert InvalidAmount();
@@ -125,7 +125,7 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
             revert NotKnoBlockOwner();
         }
         if (KnoBlock.currentAmount == KnoBlock.unlockAmount) {
-            revert KnoBlockUnlocked();
+            revert KnoBlockClosed();
         }
         KnoBlock.isCancelled = true;
     }
@@ -142,7 +142,7 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
             revert NotKnoBlockOwner();
         }
         if (KnoBlock.isCancelled) {
-            revert KnoBlockCancelled();
+            revert KnoBlockClosed();
         }
         if (KnoBlock.currentAmount != KnoBlock.unlockAmount) {
             revert KnoBlockLocked();
