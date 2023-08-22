@@ -32,9 +32,9 @@ interface IKnoBlockInternal {
     error KnoBlockLocked();
 
     /**
-     * @dev error thrown when the user inputs an amount that is not valid
+     * @dev error thrown when the user attempts to withdraw more than they have deposited
      */
-    error InvalidAmount();
+    error AmountExceedsDeposit();
 
     /**
      * @dev error thrown when the caller is not the owner of the KnoBlock
