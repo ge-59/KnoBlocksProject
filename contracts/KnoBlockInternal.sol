@@ -157,7 +157,7 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
      * @notice for admin to set the withdrawFee in BASIS
      * @param feeBP the percentage fee in BASIS points
      */
-    function _setWithdrawFeeBP(uint256 feeBP) internal onlyOwner {
+    function _setWithdrawFeeBP(uint256 feeBP) internal {
         if (feeBP > 10000) {
             revert Basis_Exceeded();
         }
@@ -168,7 +168,7 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
      * @notice for admin to set the depositFee in BASIS
      * @param feeBP the percentage fee in BASIS points
      */
-    function _setDepositFeeBP(uint256 feeBP) internal onlyOwner {
+    function _setDepositFeeBP(uint256 feeBP) internal {
         if (feeBP > 10000) {
             revert Basis_Exceeded();
         }
@@ -179,7 +179,7 @@ abstract contract KnoBlockInternal is OwnableInternal, IKnoBlockInternal {
      * @notice for admin to withdraw the fees earned
      */
 
-    function _withdrawFees() internal onlyOwner {
+    function _withdrawFees() internal {
         payable(msg.sender).sendValue(KnoBlockStorage.layout().accruedFees);
     }
 
