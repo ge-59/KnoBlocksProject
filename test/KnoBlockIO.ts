@@ -26,27 +26,27 @@ export function describeBehaviorOfKnoBlockIO(deploy: () => Promise<IKnoBlock>) {
         instance = await deploy();
       });
 
-      describe('Deployment', function () {
+      describe('contract initiated correctly', function () {
         it('sets the right owner', async function () {
           const owner = await instance.connect(deployer).owner();
           expect(deployer.address).to.equal(owner);
         });
       });
 
-      describe('#create()', () => {
-        it('increments the count variable by 1', async function () {
+      describe('#create(uint256,knoType)', () => {
+        it('increments count variable', async function () {
           await instance.connect(deployer).create(1001, one);
           expect(await instance.connect(deployer).count()).to.equal(one);
         });
 
-        it('sets creator as msg.sender', async function () {
+        it('sets msg.sender as creator', async function () {
           await instance.connect(deployer).create(1001, one);
           expect(await instance.connect(deployer).creator(zero)).to.equal(
             deployer.address,
           );
         });
 
-        it('sets unlockAmount correctly', async function () {
+        it('sets unlockAmount to amount', async function () {
           await instance.connect(deployer).create(1001, one);
           expect(await instance.connect(deployer).unlockAmount(zero)).to.equal(
             BigNumber.from('1001'),
@@ -63,7 +63,7 @@ export function describeBehaviorOfKnoBlockIO(deploy: () => Promise<IKnoBlock>) {
             .withArgs(zero);
         });
       });
-      describe('#deposit()', () => {
+      describe('#deposit(uint256)', () => {
         it('increases the KnoBlock`s currentAmount by msg.value - fee', async function () {
           const msgvalue = ethers.utils.parseUnits('1001', 0);
           await instance.connect(deployer).create(1001, one);
@@ -78,7 +78,7 @@ export function describeBehaviorOfKnoBlockIO(deploy: () => Promise<IKnoBlock>) {
             expectedNetAmount,
           );
         });
-        it('updates msg.senders deposit value accurately', async function () {
+        it('updates msg.sender`s deposit value accurately', async function () {
           const msgvalue = ethers.utils.parseUnits('1001', 0);
           await instance.connect(deployer).create(1001, one);
           await instance.connect(deployer).setDepositFeeBP(185);
@@ -92,7 +92,7 @@ export function describeBehaviorOfKnoBlockIO(deploy: () => Promise<IKnoBlock>) {
             await instance.connect(deployer).deposits(zero, deployer.address),
           ).to.equal(expectedNetAmount);
         });
-        it('emits unlock event if currentAmount is equal to UnlockAmount', async function () {
+        it('emits unlock event if currentAmount is equal to unlockAmount', async function () {
           const msgvalue = ethers.utils.parseUnits('10001', 0);
           await instance.connect(deployer).create(1001, one);
           await instance.connect(deployer).setDepositFeeBP(185);
@@ -102,7 +102,7 @@ export function describeBehaviorOfKnoBlockIO(deploy: () => Promise<IKnoBlock>) {
             .to.emit(instance, 'BlockUnlocked')
             .withArgs(zero);
         });
-        it('returns deposit overkill to Msg.sender', async function () {
+        it('returns excess deposited amount to Msg.sender', async function () {
           const msgvalue = ethers.utils.parseUnits('2000', 0);
           const unlockAmount = ethers.utils.parseUnits('1001', 0);
           await instance.connect(deployer).create(1001, one);
@@ -118,7 +118,7 @@ export function describeBehaviorOfKnoBlockIO(deploy: () => Promise<IKnoBlock>) {
           ).to.changeEtherBalance(deployer, -expectedAmount);
         });
         describe('reverts if...', () => {
-          it('fails transaction in KnoBlock is already Unlocked', async function () {
+          it('fails transaction if KnoBlock is already unlocked', async function () {
             const msgvalue = ethers.utils.parseUnits('2000', 0);
             await instance.connect(deployer).create(1001, one);
             await instance.connect(deployer).setDepositFeeBP(185);
@@ -129,8 +129,8 @@ export function describeBehaviorOfKnoBlockIO(deploy: () => Promise<IKnoBlock>) {
           });
         });
       });
-      describe('#withdraw()', () => {
-        it('reduces KnoBlocks currentAmount by amount withdrawn', async function () {
+      describe('#withdraw(uint256,uint256)', () => {
+        it('reduces KnoBlock`s currentAmount by amount withdrawn', async function () {
           const msgvalue = ethers.utils.parseUnits('1000', 0);
           await instance.connect(deployer).create(1001, one);
           await instance.connect(deployer).setWithdrawFeeBP(185);
@@ -140,7 +140,7 @@ export function describeBehaviorOfKnoBlockIO(deploy: () => Promise<IKnoBlock>) {
             zero,
           );
         });
-        it('reduces users deposit amount by withdrawn amount', async function () {
+        it('reduces user`s deposit amount by withdrawn amount', async function () {
           const msgvalue = ethers.utils.parseUnits('1000', 0);
           await instance.connect(deployer).create(1001, one);
           await instance.connect(deployer).setWithdrawFeeBP(185);
@@ -166,7 +166,7 @@ export function describeBehaviorOfKnoBlockIO(deploy: () => Promise<IKnoBlock>) {
         });
 
         describe('reverts if...', () => {
-          it('KnoBlock is Currently Unlocked', async function () {
+          it('KnoBlock is currently Unlocked', async function () {
             const msgvalue = ethers.utils.parseUnits('10000', 0);
             await instance.connect(deployer).create(1001, one);
             await instance.connect(deployer).setDepositFeeBP(185);
@@ -188,14 +188,14 @@ export function describeBehaviorOfKnoBlockIO(deploy: () => Promise<IKnoBlock>) {
           });
         });
       });
-      describe('#cancel()', () => {
+      describe('#cancel(uint256)', () => {
         it('deletes the KnoBlock', async function () {
           await instance.connect(deployer).create(1001, one);
           await instance.connect(deployer).cancel(zero);
           expect(await instance.connect(deployer).cancelled(zero)).to.be.true;
         });
         describe('reverts if...', () => {
-          it('msg.sender is not the creator of the KnoBlock', async function () {
+          it('caller is not the creator of the KnoBlock', async function () {
             await instance.connect(deployer).create(1001, one);
             await expect(
               instance.connect(bob).cancel(zero),
@@ -212,7 +212,7 @@ export function describeBehaviorOfKnoBlockIO(deploy: () => Promise<IKnoBlock>) {
           });
         });
       });
-      describe('#claim()', () => {
+      describe('#claim(uint256)', () => {
         it('transfers unlockAmount to creator', async function () {
           const msgvalue = ethers.utils.parseUnits('10000', 0);
           const expectedAmount = ethers.utils.parseUnits('1001', 0);
@@ -233,7 +233,7 @@ export function describeBehaviorOfKnoBlockIO(deploy: () => Promise<IKnoBlock>) {
         });
 
         describe('reverts if...', () => {
-          it('msg.sender is not the creator of the KnoBlock', async function () {
+          it('caller is not the creator of the KnoBlock', async function () {
             const msgvalue = ethers.utils.parseUnits('2000', 0);
             await instance.connect(deployer).create(1001, one);
             await instance.connect(deployer).setDepositFeeBP(185);

@@ -9,7 +9,7 @@ export interface KnoBlockAdminBehaviorArgs {}
 export function describeBehaviorOfKnoBlockAdmin(
   deploy: () => Promise<IKnoBlock>,
 ) {
-  describe.only('KnoBlockAdmin contract', function () {
+  describe('KnoBlockAdmin contract', function () {
     describe('KnoBlockAdmin', function () {
       let deployer: SignerWithAddress;
       let bob: SignerWithAddress;
@@ -28,7 +28,7 @@ export function describeBehaviorOfKnoBlockAdmin(
         instance = await deploy();
       });
 
-      describe('#setOwner()', function () {
+      describe('#setOwner(address)', function () {
         it('sets the right owner', async function () {
           await instance.connect(deployer).setOwner(bob.address);
           expect(await instance.connect(deployer).owner()).to.equal(
@@ -36,7 +36,7 @@ export function describeBehaviorOfKnoBlockAdmin(
           );
         });
       });
-      describe('#setWithdrawFeeBP()', function () {
+      describe('#setWithdrawFeeBP(uint256)', function () {
         it('sets the withdraw fee', async function () {
           await instance.connect(deployer).setWithdrawFeeBP(5);
           expect(await instance.connect(deployer).withdrawFeeBP()).to.equal(5);
@@ -47,14 +47,14 @@ export function describeBehaviorOfKnoBlockAdmin(
               instance.connect(deployer).setWithdrawFeeBP(10001),
             ).to.be.revertedWithCustomError(instance, 'Basis_Exceeded');
           });
-          it('used by non-owner', async function () {
+          it('called by non-owner', async function () {
             await expect(
               instance.connect(bob).setWithdrawFeeBP(5),
             ).to.be.revertedWithCustomError(instance, 'Ownable__NotOwner');
           });
         });
       });
-      describe('#setDepositFeeBP()', function () {
+      describe('#setDepositFeeBP(uint256)', function () {
         it('sets the deposit fee', async function () {
           await instance.connect(deployer).setDepositFeeBP(5);
           expect(await instance.connect(deployer).depositFeeBP()).to.equal(5);
@@ -65,7 +65,7 @@ export function describeBehaviorOfKnoBlockAdmin(
               instance.connect(deployer).setDepositFeeBP(10001),
             ).to.be.revertedWithCustomError(instance, 'Basis_Exceeded');
           });
-          it('used by non-owner', async function () {
+          it('called by non-owner', async function () {
             await expect(
               instance.connect(bob).setDepositFeeBP(5),
             ).to.be.revertedWithCustomError(instance, 'Ownable__NotOwner');
@@ -73,7 +73,7 @@ export function describeBehaviorOfKnoBlockAdmin(
         });
       });
       describe('#withdrawFees()', function () {
-        it('withdraws accrued fees', async function () {
+        it('transfers accrued fees to the contract owner', async function () {
           const msgvalue = ethers.utils.parseUnits('1000', 0);
           await instance.connect(deployer).setDepositFeeBP(1000);
           await instance.connect(bob).create(1001, one);
@@ -87,7 +87,7 @@ export function describeBehaviorOfKnoBlockAdmin(
           ).to.changeEtherBalance(deployer, fee);
         });
         describe('reverts if...', () => {
-          it('used by non-owner', async function () {
+          it('called by non-owner', async function () {
             await expect(
               instance.connect(bob).withdrawFees,
             ).to.be.revertedWithCustomError(instance, 'Ownable__NotOwner');

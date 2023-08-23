@@ -32,7 +32,7 @@ export function describeBehaviorOfKnoBlockView(
           expect(await instance.connect(deployer).count()).to.equal(one);
         });
       });
-      describe('#creator()', function () {
+      describe('#creator(uint256)', function () {
         it('returns creator', async function () {
           await instance.connect(bob).create(1001, one);
           expect(await instance.connect(deployer).creator(0)).to.equal(
@@ -40,7 +40,7 @@ export function describeBehaviorOfKnoBlockView(
           );
         });
       });
-      describe('#unlockAmount()', function () {
+      describe('#unlockAmount(uint256)', function () {
         it('returns unlockAmount', async function () {
           await instance.connect(deployer).create(1001, one);
           expect(await instance.connect(deployer).unlockAmount(0)).to.equal(
@@ -48,7 +48,7 @@ export function describeBehaviorOfKnoBlockView(
           );
         });
       });
-      describe('#currentAmount()', function () {
+      describe('#currentAmount(uint256)', function () {
         it('returns currentAmount', async function () {
           const msgvalue = ethers.utils.parseUnits('1001', 0);
           await instance.connect(deployer).create(1001, one);
@@ -58,20 +58,20 @@ export function describeBehaviorOfKnoBlockView(
           );
         });
       });
-      describe('#knoType()', function () {
+      describe('#knoType(uint256)', function () {
         it('returns knoType', async function () {
           await instance.connect(deployer).create(1001, one);
           expect(await instance.connect(deployer).knoType(0)).to.equal(one);
         });
       });
-      describe('#cancelled()', function () {
+      describe('#cancelled(uint256)', function () {
         it('returns cancelled', async function () {
           await instance.connect(deployer).create(1001, one);
           await instance.connect(deployer).cancel(0);
           expect(await instance.connect(deployer).cancelled(0)).to.equal(true);
         });
       });
-      describe('#deposits()', function () {
+      describe('#deposits(uint256,address)', function () {
         it('returns deposits', async function () {
           const msgvalue = ethers.utils.parseUnits('1000', 0);
           await instance.connect(deployer).create(1001, one);
