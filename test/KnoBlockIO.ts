@@ -99,7 +99,7 @@ export function describeBehaviorOfKnoBlockIO(deploy: () => Promise<IKnoBlock>) {
           await expect(
             instance.connect(deployer).deposit(zero, { value: msgvalue }),
           )
-            .to.emit(instance, 'BlockUnlocked')
+            .to.emit(instance, 'KnoBlockUnlocked')
             .withArgs(zero);
         });
         it('returns excess deposited amount to Msg.sender', async function () {
@@ -125,7 +125,7 @@ export function describeBehaviorOfKnoBlockIO(deploy: () => Promise<IKnoBlock>) {
             await instance.connect(deployer).deposit(zero, { value: msgvalue });
             await expect(
               instance.connect(bob).deposit(zero, { value: msgvalue }),
-            ).to.be.revertedWithCustomError(instance, 'KnoBlockUnlocked');
+            ).to.be.revertedWithCustomError(instance, 'KnoBlockClosed');
           });
         });
       });
@@ -174,7 +174,7 @@ export function describeBehaviorOfKnoBlockIO(deploy: () => Promise<IKnoBlock>) {
             await instance.connect(bob).deposit(zero, { value: msgvalue });
             await expect(
               instance.connect(bob).withdraw(zero, 1000),
-            ).to.be.revertedWithCustomError(instance, 'KnoBlockUnlocked');
+            ).to.be.revertedWithCustomError(instance, 'KnoBlockClosed');
           });
           it('attempted withdrawl is larger the deposit', async function () {
             const msgvalue = ethers.utils.parseUnits('1000', 0);
@@ -184,7 +184,7 @@ export function describeBehaviorOfKnoBlockIO(deploy: () => Promise<IKnoBlock>) {
             await instance.connect(bob).deposit(zero, { value: msgvalue });
             await expect(
               instance.connect(bob).withdraw(zero, 2000),
-            ).to.be.revertedWithCustomError(instance, 'InvalidAmount');
+            ).to.be.revertedWithCustomError(instance, 'AmountExceedsDeposit');
           });
         });
       });
@@ -199,7 +199,7 @@ export function describeBehaviorOfKnoBlockIO(deploy: () => Promise<IKnoBlock>) {
             await instance.connect(deployer).create(1001, one);
             await expect(
               instance.connect(bob).cancel(zero),
-            ).to.be.revertedWithCustomError(instance, 'NotKnoBlockOwner');
+            ).to.be.revertedWithCustomError(instance, 'OnlyKnoBlockOwner');
           });
           it('KnoBlock has been unlocked', async function () {
             const msgvalue = ethers.utils.parseUnits('10000', 0);
@@ -208,7 +208,7 @@ export function describeBehaviorOfKnoBlockIO(deploy: () => Promise<IKnoBlock>) {
             await instance.connect(deployer).deposit(zero, { value: msgvalue });
             await expect(
               instance.connect(deployer).cancel(zero),
-            ).to.be.revertedWithCustomError(instance, 'KnoBlockUnlocked');
+            ).to.be.revertedWithCustomError(instance, 'KnoBlockClosed');
           });
         });
       });
@@ -240,7 +240,7 @@ export function describeBehaviorOfKnoBlockIO(deploy: () => Promise<IKnoBlock>) {
             await instance.connect(bob).deposit(zero, { value: msgvalue });
             await expect(
               instance.connect(bob).claim(zero),
-            ).to.be.revertedWithCustomError(instance, 'NotKnoBlockOwner');
+            ).to.be.revertedWithCustomError(instance, 'OnlyKnoBlockOwner');
           });
           it('KnoBlock is still locked', async function () {
             await instance.connect(deployer).create(1001, one);
@@ -256,7 +256,7 @@ export function describeBehaviorOfKnoBlockIO(deploy: () => Promise<IKnoBlock>) {
             await instance.connect(deployer).cancel(zero);
             await expect(
               instance.connect(deployer).claim(zero),
-            ).to.be.revertedWithCustomError(instance, 'KnoBlockCancelled');
+            ).to.be.revertedWithCustomError(instance, 'KnoBlockClosed');
           });
         });
       });
