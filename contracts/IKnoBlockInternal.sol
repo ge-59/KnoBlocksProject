@@ -2,24 +2,53 @@
 
 pragma solidity ^0.8.8;
 
-interface IKnoBlockInternal {
-    event NewKnoBlock(
-        uint256 blockId,
-        address creator,
-        uint256 unlockAmount,
-        uint256 currentAmount,
-        KnoType knoType
-    );
-    // To signal the release of a new IoI.
-    event BlockUnlocked(
-        uint256 blockId,
-        address creator,
-        uint256 unlockAmount,
-        uint256 currentAmount,
-        KnoType knoType
-    );
+/**
+ * @title KnoBlockInternal Interface
+ * @notice this interface contains events and error types for the KnoBlock Dapp
+ * along with a KnoType enum representing the different formats of information.
+ */
 
-    // To define the type of information.
+interface IKnoBlockInternal {
+    /**
+     * @dev emitted when a new KnoBlock is created
+     * @param blockId the unique identifier of the KnoBlock
+     */
+    event KnoBlockCreated(uint256 blockId);
+
+    /**
+     * @dev emitted when a KnoBlock is unlocked
+     * @param blockId the unique identifier of the KnoBlock
+     */
+    event KnoBlockUnlocked(uint256 blockId);
+
+    /**
+     * @dev error thrown when attempting actions that are unable to be executed on a cancelled or complete KnoBlock
+     */
+    error KnoBlockClosed();
+
+    /**
+     * @dev error thrown when attempting actions that are unable to be executed on an incomplete KnoBlock
+     */
+    error KnoBlockLocked();
+
+    /**
+     * @dev error thrown when the user attempts to withdraw more than they have deposited
+     */
+    error AmountExceedsDeposit();
+
+    /**
+     * @dev error thrown when the caller is not the owner of the KnoBlock
+     */
+    error OnlyKnoBlockOwner();
+
+    /**
+     * @dev error thrown when the BASIS is exceeded
+     */
+    error Basis_Exceeded();
+
+    /**
+     * @dev enumeration representing different formats of information contained within a KnoBlock
+     */
     enum KnoType {
         PDF,
         MP4,

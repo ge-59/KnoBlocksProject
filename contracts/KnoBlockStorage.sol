@@ -4,20 +4,26 @@ pragma solidity ^0.8.8;
 
 import { IKnoBlockInternal } from './IKnoBlockInternal.sol';
 
+/**
+ * @title KnoBlockStorage Library
+ * @notice this library defines the storage layout for the KnoBlock Dapp
+ */
 library KnoBlockStorage {
     struct KnoBlock {
-        address creator;
         uint256 unlockAmount;
         uint256 currentAmount;
+        address creator;
+        bool isCancelled;
         IKnoBlockInternal.KnoType knoType;
-        bool Unlocked;
         mapping(address => uint256) deposits;
     }
 
     struct Layout {
-        address owner;
         uint256 count;
-        mapping(uint256 => KnoBlock) knoBlocks;
+        uint256 withdrawFeeBP;
+        uint256 depositFeeBP;
+        uint256 accruedFees;
+        mapping(uint256 => mapping(uint256 => KnoBlock)) knoBlocks;
     }
 
     bytes32 internal constant STORAGE_SLOT =

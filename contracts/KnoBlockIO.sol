@@ -3,20 +3,45 @@
 pragma solidity ^0.8.8;
 
 import { KnoBlockInternal } from './KnoBlockInternal.sol';
+import { IKnoBlockIO } from './IKnoBlockIO.sol';
 
-contract KnoBlockIO is KnoBlockInternal {
-    function createKnoBlock(
-        uint256 unlockValue,
-        KnoType knoType
-    ) public payable {
-        _createKnoBlock(unlockValue, knoType);
+/**
+ * @title KnoBlockIO Contract
+ * @notice diamond facet implementing the user input and output functions of the KnoBlock Dapp
+ */
+contract KnoBlockIO is KnoBlockInternal, IKnoBlockIO {
+    /**
+     * @inheritdoc IKnoBlockIO
+     */
+    function create(uint256 unlockAmount, KnoType knoType) external payable {
+        _create(unlockAmount, knoType);
     }
 
-    function knoDeposit(uint256 blockid) public payable {
-        _deposit(blockid);
+    /**
+     * @inheritdoc IKnoBlockIO
+     */
+    function deposit(uint256 blockId) external payable {
+        _deposit(blockId);
     }
 
-    function knoWithdraw(uint256 blockid, uint256 amount) public {
-        _withdraw(blockid, amount);
+    /**
+     * @inheritdoc IKnoBlockIO
+     */
+    function withdraw(uint256 blockId, uint256 amount) external {
+        _withdraw(blockId, amount);
+    }
+
+    /**
+     * @inheritdoc IKnoBlockIO
+     */
+    function cancel(uint256 blockId) external {
+        _cancel(blockId);
+    }
+
+    /**
+     * @inheritdoc IKnoBlockIO
+     */
+    function claim(uint256 blockId) external {
+        _claim(blockId);
     }
 }
